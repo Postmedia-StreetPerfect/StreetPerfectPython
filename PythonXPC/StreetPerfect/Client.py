@@ -2,6 +2,7 @@ import ctypes, os
 from sys import platform
 from .Helpers import OutString
 from .Models import *
+from . import StreetPerfectException
 
 
 def InString(param_str):
