@@ -12,7 +12,10 @@ class OutString:
 		return s
 
 	def ToInt(self): 
-		return int(self.ToString())
+		try:
+			return int(self.ToString())
+		except:
+			return 0
 
 	def ToList(self):
 		ret = []

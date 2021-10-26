@@ -3,7 +3,7 @@ from StreetPerfect import Models, StreetPerfectException
 
 try:
 
-    client = Client("ServiceAddress=127.0.0.1;ServsicePort=1330")
+    client = Client("ServiceAddress=127.0.0.1;ServicePort=1330")
     print ("info= {}\n".format("\n".join(client.Info())))
 
     addr = Models.caFetchAddressRequest()
