@@ -1,6 +1,6 @@
 # StreetPerfectPython
 
-Esy to use
+Easy to use
 
 ```Python
 from StreetPerfect.Client import Client
@@ -8,7 +8,7 @@ from StreetPerfect import Models, StreetPerfectException
 
 try:
 
-    # oass your SP connection string when creating teh client
+    # pass your SP connection string when creating the client
     client = Client("ServiceAddress=127.0.0.1;ServicePort=1330")
     print ("info= {}\n".format("\n".join(client.Info())))
 
