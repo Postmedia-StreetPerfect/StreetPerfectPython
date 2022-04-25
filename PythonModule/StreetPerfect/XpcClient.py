@@ -15,7 +15,7 @@ def InString(param_str):
 	return str(param_str).encode(encoding='ascii', errors='ignore')
 
 
-class Client:
+class XpcClient:
 	_def_constr = b"ServiceAddress=127.0.0.1;ServicePort=1330;"
 	_def_win_dll = "SpaaSqaXpcClientNim64.dll"
 	_def_linux_so = "libSpaaSqaXpcClientNim64.so"
@@ -181,7 +181,7 @@ class Client:
 		PS_ARG_out_status_messages = OutString()
 		_in_not_used = b""
 			
-		ret = self.hDll.StreetPerfectValidateAddress(_connection_string
+		ret = self.hDll.StreetPerfectValidateAddress(self.connection_string
 							, InString(req.address_line), InString(req.city)
 			, InString(req.province), InString(req.postal_code)
 			, _in_not_used #req.country

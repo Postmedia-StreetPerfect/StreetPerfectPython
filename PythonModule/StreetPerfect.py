@@ -1,5 +1,5 @@
 import logging
-from StreetPerfect.Client import Client
+from StreetPerfect.XpcClient import XpcClient
 from StreetPerfect.HttpClient import HttpClient, StreetPerfectHttpException
 from StreetPerfect import StreetPerfectException
 from StreetPerfect.Models import *
@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG)
 def XPC_Test():
     try:
 
-        client = Client("ServiceAddress=127.0.0.1;ServicePort=1330")
+        client = XpcClient("ServiceAddress=127.0.0.1;ServicePort=1330")
         print ("info= {}\n".format("\n".join(client.Info())))
 
         addr = caFetchAddressRequest()

@@ -1,5 +1,5 @@
 # StreetPerfectPythonXPC
-StreetPerfect Python client - XPC native
+StreetPerfect Python client - XPC native and HTTP
 
 This is the StreetPerfect Python Client module. You can build this wheel by running the build_dist_package.cmd batch file.
 
