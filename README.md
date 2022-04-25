@@ -9,7 +9,6 @@ from StreetPerfect.XpcClient import XpcClient, StreetPerfectException
 from StreetPerfect.Models import *
 
 try:
-
     # pass your SP connection string when creating the client
     client = Client("ServiceAddress=127.0.0.1;ServicePort=1330")
     print ("info= {}\n".format("\n".join(client.Info())))
