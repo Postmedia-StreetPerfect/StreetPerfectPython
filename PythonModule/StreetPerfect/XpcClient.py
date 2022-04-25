@@ -4,6 +4,8 @@ from .Helpers import OutString
 from .Models import *
 from . import StreetPerfectException
 
+class StreetPerfectException(Exception):
+	pass
 
 def InString(param_str):
 	if param_str is str:

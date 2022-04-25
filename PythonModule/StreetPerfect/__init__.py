@@ -1,7 +1,4 @@
 
-__version__ = "11.0.0"
+__version__ = "11.0.0ß"
 
-__all__ = ["Client", "Models", "Helpers"]
-
-class StreetPerfectException(Exception):
-	pass
+__all__ = ["XpcClient", "HttpClient", "Models", "Helpers"]
