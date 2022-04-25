@@ -29,7 +29,7 @@ except StreetPerfectException as e:
     print(f"StreetPerfectException: {e}")
 ```    
     
-The Http Client is indened to superseed the XPC Client.
+The Http Client is intended to superseed the XPC Client.
 
 Both the clients use the identical interface and can be interchanged.
 
