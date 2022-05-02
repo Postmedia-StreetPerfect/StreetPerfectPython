@@ -1,18 +1,22 @@
 import logging
 from StreetPerfect.XpcClient import XpcClient
-from StreetPerfect.HttpClient import HttpClient, StreetPerfectHttpException
+from StreetPerfect.HttpClient import HttpClient
 from StreetPerfect import StreetPerfectException
 from StreetPerfect.Models import *
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
- 
+
+_sp_client_id = 'your id'
+_sp_api_key = 'your key'
+_verify = True 
 
 def XPC_Test():
     try:
 
         client = XpcClient("ServiceAddress=127.0.0.1;ServicePort=1330")
-        print ("info= {}\n".format("\n".join(client.Info())))
+        info = client.Info()
+        print("\n".join(info.info))
 
         addr = caFetchAddressRequest()
         addr.postal_code="m4w3l4"
@@ -56,17 +60,13 @@ def Http_Test():
     try:
         print("SP http client test")
 
-        client = HttpClient('bmiller@postmedia.com'
-        , '9ra1lm44k5c30ah9bngrtm7sfa663i9x76kxk40pzc12c5xf1b'
-        , use_dev_site=True, verify=False)
-
-        client.GetToken()
+        client = HttpClient(_sp_client_id, _sp_api_key, use_dev_site=True, verify=_verify)
 
         info = client.Info()
-        print(info)
+        print("\n".join(info.info))
 
         req = caTypeaheadRequest()
-        req.address_line = '3267 flow'
+        req.address_line = '3267 flo'
         req.max_returned=100
         req.tokenize_qry = True
 
@@ -75,9 +75,20 @@ def Http_Test():
 
         for r in resp.recs:
             print(r)
-    except StreetPerfectHttpException as e:
+
+        # you must call Close to stop the background token refresh timer
+        # or you can optionally use 'with' when creating the client
+        client.Close()
+
+        # optional syntax to close the client when out of scope
+        with HttpClient(_sp_client_id, _sp_api_key, use_dev_site=True, verify=_verify) as client:
+            info = client.Info()
+            print("\n".join(info.info))
+
+    except StreetPerfectException as e:
         print(f"StreetPerfectHttpException: {e}")
 
 
 if __name__ == '__main__':
+    #XPC_Test()
     Http_Test()

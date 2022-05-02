@@ -23,7 +23,7 @@ try:
         print (f"caFetchAddress = {resp.address_line}\n{resp.city}, {resp.province}, {resp.postal_code}\n")
     else:
         print (f"caFetchAddress Error:{resp.status_flag}\n{resp.status_messages}\n")
-        
+
 except StreetPerfectException as e:
     print(f"StreetPerfectException: {e}")
 ```    
@@ -37,7 +37,6 @@ from StreetPerfect.HttpClient import HttpClient, StreetPerfectHttpException
 from StreetPerfect.Models import *
 
 try:
-
     # pass your SP client id and api key
     # you can also point the client to your own local SP server
     client = HttpClient('me@somewhere.com'
@@ -57,7 +56,16 @@ try:
         print (f"caFetchAddress = {resp.address_line}\n{resp.city}, {resp.province}, {resp.postal_code}\n")
     else:
         print (f"caFetchAddress Error:{resp.status_flag}\n{resp.status_messages}\n")
-        
+
+    # you must call Close to stop the background token refresh timer
+    # or you can optionally use 'with' when creating the client
+    client.Close()      
+    
+    # optional syntax to close the client when out of scope
+    with HttpClient(_sp_client_id, _sp_api_key, use_dev_site=True, verify=_verify) as client:
+        info = client.Info()
+        print("\n".join(info.info))
+
 except StreetPerfectHttpException as e:
     print(f"StreetPerfectHttpException: {e}")
 ```    

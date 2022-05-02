@@ -39,15 +39,12 @@ class caTypeaheadResponse:
 	t_exec_ms: int
 	status_flag: str
 	status_messages: str
-	abc: str
-
 
 
 class caAddress:
 	"""
 	caAddress is the return data record response for /api/ca/search 
-
-	rec_typ_cde: int
+	rec_typ_cde = 0
 	Record Type Code
  
 	 Defines the type of address record. Valid values are:
@@ -56,153 +53,112 @@ class caAddress:
 	 3. Lock Box Address Record
 	 4. Route Service Address Record
 	 5. General Delivery Address Record
-
-	adr_typ_cde: int
+	adr_typ_cde = 0
 	Address Type Code
  
 	 A code denoting whether an address is in the form of a civic address or a delivery installation address. Valid values are:
 		1. Civic (Street) Address Format
 		2. Delivery Installation (Station) Address Format
-
-	prov_cde: str
+	prov_cde = ''
 	Province Code
  
 	 Alphabetic code identifying the province geographically. Valid values are accessible through a query function.
-
-	drctry_area_nme: str
+	drctry_area_nme = ''
 	Directory Area Name
  
 	 Major community or greater municipality grouping that contains the street address or its delivery installation. Should not be used.
-
-	st_nme: str
+	st_nme = ''
 	Street Name
  
 	 Official civic name of a roadway or artery
-
-	st_typ_cde: str
+	st_typ_cde = ''
 	Street Type Code
  
 	 Official description used to identify the type of roadway or artery. Valid values are accessible through a query function.
-
-	st_drctn_cde: str
+	st_drctn_cde = ''
 	Street Direction Code
  
 	 Street direction component of an official street name. Valid values are accessible through a query function.
-
-	st_adr_seq_cde: str
+	st_adr_seq_cde = ''
 	Street Address Sequence Code
  
 	 This code identifies the sequence associated with the range of street numbers. Valid values are: 
 	 1. Odd 
 	 2. Even 
 	 3. Consecutive
-
-	st_adr_to_nbr: int
+	st_adr_to_nbr = 0
 	Street Address to Number
  
 	 The highest street number in a range of municipal street addresses.
-
-	st_adr_nbr_sfx_to_cde: str
+	st_adr_nbr_sfx_to_cde = ''
 	Street Address Number Suffix to Code
  
 	 The address suffix associated with the street address to number. Examples of street numbers with suffixes are 14 1/2 and 22B. A numeric number denotes a fractional suffix. Valid values are:
 	 1. 1/4 
 	 2. 1/2
 	 3. 3/4
-
-	ste_to_nbr: str
+	ste_to_nbr = ''
 	Suite to Number
  
 	 Highest value in a range of suites or apartments.
-
-	st_adr_frm_nbr: int
+	st_adr_frm_nbr = 0
 	Street Address from Number
-
 	 The lowest street number in a range of municipal street addresses.
-
-	st_adr_nbr_sfx_frm_cde: str
+	st_adr_nbr_sfx_frm_cde = ''
 	Street Address Number Suffix from Code
-
 	 The address suffix associated with the street address from number. Examples of street numbers with suffixes are 14 1/2 and 22B. A numeric number denotes a fractional suffix. Valid values are:
 	 1. 1/4 
 	 2. 1/2
 	 3. 3/4
-
-	ste_frm_nbr: str
+	ste_frm_nbr = ''
 	Suite from Number
-
 	 Lowest value in a range of suites or apartments.
-
-	mncplt_nme: str
+	mncplt_nme = ''
 	Municipality Name
-
 	 A municipality is any village, town or city in Canada that is recognized as a valid mailing address by Canada Post.
 	#not used public int? route_serv_box_to_nbr 
 	#not used public int? route_serv_box_frm_nbr 
-
-	route_serv_typ_dsc_2: str
+	route_serv_typ_dsc_2 = ''
 	Route Service Type Description for type 2 records
-
 	 The code that identifies the type of route service. Valid values are: 
 	 - RR - Rural Route 
 	 - SS - Suburban Service 
 	 - MR - Mobile Route 
 	 - GD - General Delivery 
-
-	route_serv_nbr_2: int
+	route_serv_nbr_2 = 0
 	Route Service Number for type 2 records
-
 	 Number that identifies Rural Route, Suburban Service or Mobile Route delivery mode
-
-	di_area_nme: str
+	di_area_nme = ''
 	Delivery Installation Area Name
-
 	 The name of a village, town, municipality or city that forms part of a Delivery Installation Name. While this field is populated, it is USUALLY not required to be displayed as part of the address.
-
-	di_typ_dsc: str
+	di_typ_dsc = ''
 	Delivery Installation Type Description
-
 	 The category of delivery installation. Valid values are accessible through a query function.
-
-	di_qlfr_nme: str
+	di_qlfr_nme = ''
 	Delivery Installation Qualifier Name
-
 	 When more than one delivery installation serves an area, the qualifier name uniquely identifies the delivery installation.
-
-	lock_box_bag_to_nbr: int
+	lock_box_bag_to_nbr = 0
 	Lock Box bag to Number
-
 	 Highest number in a range of lock boxes.
-
-	lock_box_bag_frm_nbr: int
+	lock_box_bag_frm_nbr = 0
 	Lock Box bag from Number
-
 	 Lowest number in a range of lock boxes.
-
-	route_serv_typ_dsc_4: str
+	route_serv_typ_dsc_4 = ''
 	Route Service Type Description for type 4 records
-
 	 The code that identifies the type of route service. Valid values are the same as for type 2 records.
-
-	route_serv_nbr_4: int
+	route_serv_nbr_4 = 0
 	Route Service Number for type 4 records
-
 	 Number that identifies Rural Route, Suburban Service or Mobile Route delivery mode
-
-	pstl_cde: str
+	pstl_cde = ''
 	Postal Code
-
 	 A ten character, alpha numeric combination (ANANAN) assigned to one or more postal addresses. The postal code is an integral part of every postal address in Canada and is required for the mechanized processing of mail. Postal codes are also used to identify various CPC processing facilities and delivery installations.
-
-	#di_pstl_cde: str
+	#di_pstl_cde = ''
 	# Delivery Installation Postal Code
 	#
 	# The postal code of the delivery installation responsible for delivery to the postal code. Not Used.
 	#
-
-	text_record_flag: str
+	text_record_flag = ''
 	Text Record Flag
-
 	 Defines the type of record in the TEXT lookup table 
 	 * A = Building name record 
 	 * B = Large Volume Receiver Name (Street) record 
@@ -210,42 +166,41 @@ class caAddress:
 	 * D = Large Volume Receiver Name (PO BOX) record 
 	 * E = Government Name (PO BOX) record 
 	 * F = General Delivery record
-
-	cntry_cde: str
+	cntry_cde = ''
 	Country Code
-
-	orig_rec: str
+	orig_rec = ''
 	Original StreetPerfect internal record when debugging
 	"""
 
-	rec_typ_cde: int
-	adr_typ_cde: int
-	prov_cde: str
-	drctry_area_nme: str
-	st_nme: str
-	st_typ_cde: str
-	st_drctn_cde: str
-	st_adr_seq_cde: str
-	st_adr_to_nbr: int
-	st_adr_nbr_sfx_to_cde: str
-	ste_to_nbr: str
-	st_adr_frm_nbr: int
-	st_adr_nbr_sfx_frm_cde: str
-	ste_frm_nbr: str
-	mncplt_nme: str
-	route_serv_typ_dsc_2: str
-	route_serv_nbr_2: int
-	di_area_nme: str
-	di_typ_dsc: str
-	di_qlfr_nme: str
-	lock_box_bag_to_nbr: int
-	lock_box_bag_frm_nbr: int
-	route_serv_typ_dsc_4: str
-	route_serv_nbr_4: int
-	pstl_cde: str
-	text_record_flag: str
-	cntry_cde: str
-	orig_rec: str
+	def __init__(self):
+		self.rec_typ_cde = 0
+		self.adr_typ_cde = 0
+		self.prov_cde = ''
+		self.drctry_area_nme = ''
+		self.st_nme = ''
+		self.st_typ_cde = ''
+		self.st_drctn_cde = ''
+		self.st_adr_seq_cde = ''
+		self.st_adr_to_nbr = 0
+		self.st_adr_nbr_sfx_to_cde = ''
+		self.ste_to_nbr = ''
+		self.st_adr_frm_nbr = 0
+		self.st_adr_nbr_sfx_frm_cde = ''
+		self.ste_frm_nbr = ''
+		self.mncplt_nme = ''
+		self.route_serv_typ_dsc_2 = ''
+		self.route_serv_nbr_2 = 0
+		self.di_area_nme = ''
+		self.di_typ_dsc = ''
+		self.di_qlfr_nme = ''
+		self.lock_box_bag_to_nbr = 0
+		self.lock_box_bag_frm_nbr = 0
+		self.route_serv_typ_dsc_4 = ''
+		self.route_serv_nbr_4 = 0
+		self.pstl_cde = ''
+		self.text_record_flag = ''
+		self.cntry_cde = ''
+		self.orig_rec = ''
 	
 	def __str__(self):
 		return "{st_adr_frm_nbr}-{st_adr_to_nbr} {st_nme} {st_typ_cde}, {mncplt_nme}, {prov_cde}, {pstl_cde}".format(**self.__dict__)
@@ -266,160 +221,178 @@ class usAddress:
 	 * S – Urban 
 	 * U – Unique
 	 * \* – Generic
-
-	orig_rec: str
+	orig_rec = ''
 	Original StreetPerfect record when debugging
 	"""
 	
-	RecordType: str
-	CityName: str
-	StateAbbreviation: str
-	ZipCode: str
-	PlusFourAddonLow: str
-	PlusFourAddonHigh: str
-	StreetNumberLow: str
-	StreetNumberHigh: str
-	StreetPreDirection: str
-	StreetName: str
-	StreetSuffix: str
-	StreetPostDirection: str
-	UnitType: str
-	UnitNumberLow: str
-	UnitNumberHigh: str
-	PrivateMailBoxNumber: str
-	LocationName: str
-	orig_rec: str
+	def __init__(self):
+		self.RecordType = ''
+		self.CityName = ''
+		self.StateAbbreviation = ''
+		self.ZipCode = ''
+		self.PlusFourAddonLow = ''
+		self.PlusFourAddonHigh = ''
+		self.StreetNumberLow = ''
+		self.StreetNumberHigh = ''
+		self.StreetPreDirection = ''
+		self.StreetName = ''
+		self.StreetSuffix = ''
+		self.StreetPostDirection = ''
+		self.UnitType = ''
+		self.UnitNumberLow = ''
+		self.UnitNumberHigh = ''
+		self.PrivateMailBoxNumber = ''
+		self.LocationName = ''
+		self.orig_rec = ''
 
 
 class GetInfoResponse:
-	info: list
-	status_flag: str
-	status_messages: str
+
+	def __init__(self):
+		self.info = []
+		self.status_flag = ''
+		self.status_messages = ''
 
 
 class caAddressRequest:
-	recipient: str
-	address_line: str
-	city: str
-	province: str
-	postal_code: str
+
+	def __init__(self):
+		self.recipient = ''
+		self.address_line = ''
+		self.city = ''
+		self.province = ''
+		self.postal_code = ''
 
 
 class caCorrectionResponse:
 	"""
-	status_flag: str
+	status_flag = ''
 	* V = Submitted address is Valid
 	 * C = Submitted address is Corrected
 	 * N = Submitted address is Not correct
 	 * F = Submitted address is Foreign
 	"""
 
-	recipient: str
-	address_line: str
-	city: str
-	province: str
-	postal_code: str
-	extra_information: str
-	unidentified_component: str
+	def __init__(self):
+		self.recipient = ''
+		self.address_line = ''
+		self.city = ''
+		self.province = ''
+		self.postal_code = ''
+		self.extra_information = ''
+		self.unidentified_component = ''
 
-	status_flag: str
+		self.status_flag = ''
 
-	status_messages: str
-	function_messages: list
+		self.status_messages = ''
+		self.function_messages = []
 
 class caParseResponse:
 	"""
-	status_flag: str
+	status_flag = ''
 	Valid Address
 	 * P = Parsed &amp; Valid
 	 
 	 Invalid Address
 	 * I = Parsed &amp; Invalid
 	"""
-	address_type: str
-	street_number: str
-	street_suffix: str
-	street_name: str
-	street_type: str
-	street_direction: str
-	unit_type: str
-	unit_number: str
-	service_type: str
-	service_number: str
-	service_area_name: str
-	service_area_type: str
-	service_area_qualifier: str
-	extra_information: str
-	unidentified_component: str
-	status_flag: str
-	status_messages: str
-	function_messages: list
+	def __init__(self):
+		self.address_type = ''
+		self.street_number = ''
+		self.street_suffix = ''
+		self.street_name = ''
+		self.street_type = ''
+		self.street_direction = ''
+		self.unit_type = ''
+		self.unit_number = ''
+		self.service_type = ''
+		self.service_number = ''
+		self.service_area_name = ''
+		self.service_area_type = ''
+		self.service_area_qualifier = ''
+		self.extra_information = ''
+		self.unidentified_component = ''
+		self.status_flag = ''
+		self.status_messages = ''
+		self.function_messages = []
 
 
 class caSearchResponse:
 	"""
-	status_flag: str
-
+	status_flag = ''
 	* N = At least one record found
 	 * X = No records found
 	"""
-	response_count: int
-	t_exec_ms: int
-	response_address_list: list
-	status_flag: str
-	status_messages: str
-	function_messages: list
+	def __init__(self):
+		self.response_count = 0
+		self.t_exec_ms = 0
+		self.response_address_list = []
+		self.status_flag = ''
+		self.status_messages = ''
+		self.function_messages = []
 
 
 # CA legacy non-ProcessAddress functions
 
 
 class caFetchAddressRequest:
-	street_number: str
-	unit_number: str
-	postal_code: str
+
+	def __init__(self):
+		self.street_number = ''
+		self.unit_number = ''
+		self.postal_code = ''
 
 
 class caFetchAddressResponse:
-	address_line: str
-	city: str
-	province: str
-	postal_code: str
-		#country: str
-	status_flag: str
-	status_messages: str
+
+	def __init__(self):
+		self.address_line = ''
+		self.city = ''
+		self.province = ''
+		self.postal_code = ''
+		#country = ''
+		self.status_flag = ''
+		self.status_messages = ''
 
 
 class caFormatAddressRequest:
-	address_line: str
-	city: str
-	province: str
-	postal_code: str
-		#country: str
+
+	def __init__(self):
+		self.address_line = ''
+		self.city = ''
+		self.province = ''
+		self.postal_code = ''
+		#country = ''
 
 
 class caFormatAddressResponse:
-	format_line_one: str
-	format_line_two: str
-	format_line_three: str
-	format_line_four: str
-	format_line_five: str
-	status_flag: str
-	status_messages: str
+
+	def __init__(self):
+		self.format_line_one = ''
+		self.format_line_two = ''
+		self.format_line_three = ''
+		self.format_line_four = ''
+		self.format_line_five = ''
+		self.status_flag = ''
+		self.status_messages = ''
 
 
 class caValidateAddressRequest:
-	address_line: str
-	city: str
-	province: str
-	postal_code: str
-		#country: str
+
+	def __init__(self):
+		self.address_line = ''
+		self.city = ''
+		self.province = ''
+		self.postal_code = ''
+		#country = ''
 
 
 class caValidateAddressResponse:
-	function_messages: list
-	status_flag: str
-	status_messages: str
+
+	def __init__(self):
+		self.function_messages = []
+		self.status_flag = ''
+		self.status_messages = ''
 
 
 class caQueryRequest:
@@ -608,18 +581,21 @@ class caQueryRequest:
 	 
 	"""
 	
-	query_option: int
-	address_line: str
-	city: str
-	province: str
-	postal_code: str
-		#country: str
+	def __init__(self):
+		self.query_option = 0
+		self.address_line = ''
+		self.city = ''
+		self.province = ''
+		self.postal_code = ''
+		#country = ''
 
 
 class caQueryResponse:
-	function_messages: list
-	status_flag: str
-	status_messages: str
+
+	def __init__(self):
+		self.function_messages = []
+		self.status_flag = ''
+		self.status_messages = ''
 
 
 class caQueryWildcardRequest:
@@ -638,143 +614,134 @@ class caQueryWildcardRequest:
 	 
 	 max_returned
  		The maximum number of results to return, actual maximum is 1000. Null or zero returns default max of 1000.
-
 	"""
 
-	sort_by: int
-	address_line: str
-	city: str
-	province: str
-	max_returned: int
+	def __init__(self):
+		self.sort_by = 0
+		self.address_line = ''
+		self.city = ''
+		self.province = ''
+		self.max_returned = 0
 
 
 class caQueryWildcardResponse:
-	response_count: int
-	t_exec_ms: int
-	address_list: list
-	status_flag: str
-	status_messages: str
+
+	def __init__(self):
+		self.response_count = 0
+		self.t_exec_ms = 0
+		self.address_list = []
+		self.status_flag = ''
+		self.status_messages = ''
 
 
 
 # 133 byte SP 'view' record returned by query level 6 & 7 functions -- NOT used
 class caRangeAddress:
 	"""
-	st_adr_seq_cde: str
+	st_adr_seq_cde = ''
 	Street Address Sequence Code
 	 
 	 This code identifies the sequence associated with the range of street numbers. Valid values are: 
 	 1. Odd 
 	 2. Even 
 	 3. Consecutive
-
-
-	st_adr_frm_nbr: int
+	st_adr_frm_nbr = 0
 	Street Address to Number
 	 The highest street number in a range of municipal street addresses.
-
-
-	st_adr_to_nbr: int
+	st_adr_to_nbr = 0
 	Street Address from Number
 	 The lowest street number in a range of municipal street addresses.
-
-
-	st_nme: str
+	st_nme = ''
 	Street Name
 	 Official civic name of a roadway or artery
-
-
-	route_serv_typ_dsc_2: str
+	route_serv_typ_dsc_2 = ''
 	Route Service Type Description for type 2 records
 	 The code that identifies the type of route service. Valid values are: 
 	 - RR - Rural Route 
 	 - SS - Suburban Service 
 	 - MR - Mobile Route 
 	 - GD - General Delivery 
-
-
-	route_serv_nbr_2: int
+	route_serv_nbr_2 = 0
 	Route Service Number for type 2 records
 	 Number that identifies Rural Route, Suburban Service or Mobile Route delivery mode
-
-
-	mncplt_nme: str
+	mncplt_nme = ''
 	Municipality Name
 	 A municipality is any village, town or city in Canada that is recognized as a valid mailing address by Canada Post.
-
-
-	prov_cde: str
+	prov_cde = ''
 	Province Code
 	 Alphabetic code identifying the province geographically. Valid values are accessible through a query function.
-
-
-	pstl_cde: str
+	pstl_cde = ''
 	Postal Code
 	 A ten character, alpha numeric combination (ANANAN) assigned to one or more postal addresses. The postal code is an integral part of every postal address in Canada and is required for the mechanized processing of mail. Postal codes are also used to identify various CPC processing facilities and delivery installations.
-
-
-	orig_rec: str
+	orig_rec = ''
 	Original StreetPerfect internal record when debugging
 	"""
 
-	st_adr_seq_cde: str
-	st_adr_frm_nbr: int
-	st_adr_to_nbr: int
-	st_nme: str
-	route_serv_typ_dsc_2: str
-	route_serv_nbr_2: int
-	mncplt_nme: str
-	pstl_cde: str
-	prov_cde: str
-	orig_rec: str
+	def __init__(self):
+		self.st_adr_seq_cde = ''
+		self.st_adr_frm_nbr = 0
+		self.st_adr_to_nbr = 0
+		self.st_nme = ''
+		self.route_serv_typ_dsc_2 = ''
+		self.route_serv_nbr_2 = 0
+		self.mncplt_nme = ''
+		self.pstl_cde = ''
+		self.prov_cde = ''
+		self.orig_rec = ''
 
 
 
 
 class usAddressRequest:
-	firm_name: str
-	urbanization_name: str
-	address_line: str
-	city: str
-	state: str
-	zip_code: str
+
+	def __init__(self):
+		self.firm_name = ''
+		self.urbanization_name = ''
+		self.address_line = ''
+		self.city = ''
+		self.state = ''
+		self.zip_code = ''
 
 
 class usCorrectionResponse:
-	firm_name: str
-	urbanization_name: str
-	address_line: str
-	city: str
-	state: str
-	zip_code: str
-	status_flag: str
-	status_messages: str
-	function_messages: list
+
+	def __init__(self):
+		self.firm_name = ''
+		self.urbanization_name = ''
+		self.address_line = ''
+		self.city = ''
+		self.state = ''
+		self.zip_code = ''
+		self.status_flag = ''
+		self.status_messages = ''
+		self.function_messages = []
 
 
 class usParseResponse:
-	address_type: str
-	street_number: str
-	street_pre_direction: str
-	street_name: str
-	street_type: str
-	street_post_direction: str
-	secondary_type: str
-	secondary_number: str
-	service_type: str
-	service_number: str
-	delivery_point_barcode: str
-	congressional_district: str
-	county_name: str
-	county_code: str
-	status_flag: str
-	status_messages: str
-	function_messages: list
+
+	def __init__(self):
+		self.address_type = ''
+		self.street_number = ''
+		self.street_pre_direction = ''
+		self.street_name = ''
+		self.street_type = ''
+		self.street_post_direction = ''
+		self.secondary_type = ''
+		self.secondary_number = ''
+		self.service_type = ''
+		self.service_number = ''
+		self.delivery_point_barcode = ''
+		self.congressional_district = ''
+		self.county_name = ''
+		self.county_code = ''
+		self.status_flag = ''
+		self.status_messages = ''
+		self.function_messages = []
 
 
 class usSearchResponse:
 	"""
-	status_flag: str
+	status_flag = ''
 	Valid
 	 * S = Single Response
 	 * D = Default Response
@@ -784,31 +751,34 @@ class usSearchResponse:
 	 * M = Multiple Response
 	"""
 
-	response_count: int
-	response_address_list: list
-	status_flag: str
-	status_messages: str
-	function_messages: list
+	def __init__(self):
+		self.response_count = 0
+		self.response_address_list = []
+		self.status_flag = ''
+		self.status_messages = ''
+		self.function_messages = []
 
 
 
 # not used
 class usDeliveryInformationResponse:
-	city_abbreviation: str
-	post_office_city: str
-	post_office_state: str
-	delivery_point_bar_code: str
-	carrier_route: str
-	auto_zone_indicator: str
-	lot_number: str
-	lot_code: str
-	lacs_code: str
-	county_code: str
-	finance_number: str
-	congressional_district: str
-	pmb_designator: str
-	pmb_number: str
 
-	status_flag: str
-	status_messages: str
-	function_messages: list
+	def __init__(self):
+		self.city_abbreviation = ''
+		self.post_office_city = ''
+		self.post_office_state = ''
+		self.delivery_point_bar_code = ''
+		self.carrier_route = ''
+		self.auto_zone_indicator = ''
+		self.lot_number = ''
+		self.lot_code = ''
+		self.lacs_code = ''
+		self.county_code = ''
+		self.finance_number = ''
+		self.congressional_district = ''
+		self.pmb_designator = ''
+		self.pmb_number = ''
+
+		self.status_flag = ''
+		self.status_messages = ''
+		self.function_messages = []

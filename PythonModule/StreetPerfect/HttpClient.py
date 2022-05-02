@@ -1,9 +1,10 @@
 import requests, datetime, json, threading, time, urllib3, logging
-from .Models import *
+from . Models import *
+from . import StreetPerfectException
 
 logger = logging.getLogger(__name__)
 
-class StreetPerfectHttpException(Exception):
+class StreetPerfectHttpException(StreetPerfectException):
     def __init__(self, code, uri, msg):
         super().__init__(msg)
         self.code = code
@@ -45,6 +46,15 @@ class HttpClient:
         
         self.session.headers.update({'Content-Type': 'application/json; charset=utf-8'})
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.Close()
+
+    def Close(self):
+        if self.backgroundRefreshTimer:
+            self.backgroundRefreshTimer.cancel()
 
     def GetToken(self, force=False):
         if not self.token or force:
