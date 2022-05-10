@@ -21,7 +21,7 @@ class BackgroundRefreshTimer(threading.Timer):
 class HttpClient:
     def __init__(self, client_id, api_key
         , url=None, use_dev_site=False, verify=True, timeout=20
-        , ver='1', debug=False):
+        , ver='1', debug=False, opt=None):
         session = requests.Session()
         self.session = session
         self.apiKey=api_key
@@ -43,7 +43,7 @@ class HttpClient:
         self.expires = 0
         self.lastRefreshed = None
         self.backgroundRefreshTimer = None
-        
+        self.options = opt
         self.session.headers.update({'Content-Type': 'application/json; charset=utf-8'})
 
     def __enter__(self):
@@ -108,11 +108,15 @@ class HttpClient:
         self.lastRefreshed = datetime.datetime.now()
         print("token refreshed")
 
-    def Post(self, funct, data, ver=None, robj=None):
+    def Post(self, funct, data, ver=None, robj=None, opt=None):
         if ver == None:
             ver = self.apiVer
         uri = f'{self.baseAddr}{ver}/{funct}'
         logger.debug('post %s', uri)
+
+        if opt:
+            data.options = opt.__dict__
+
         token = self.GetToken()
         self.session.headers.update({'Authorization': f'Bearer {token}'})
         ret = self.session.post(uri
@@ -158,6 +162,13 @@ class HttpClient:
         """
         return self.Post('ca/typeahead/rec', req, robj=caTypeaheadResponse())
 
+    def caTypeheadFetch(self,  req: caTypeaheadFetchRequest) -> caTypeaheadFetchResponse:
+        """
+        TypeheadFetch
+            pass caTypeaheadFetchRequest
+            returns caTypeaheadFetchResponse
+        """
+        return self.Post('ca/typeahead/fetch', req, robj=caTypeaheadFetchResponse(), opt=self.options)
 
     def Info(self):
         """
@@ -173,7 +184,7 @@ class HttpClient:
             pass caQueryRequest
             returns caQueryResponse
         """
-        return self.Post('ca/query', req, robj=caQueryResponse())
+        return self.Post('ca/query', req, robj=caQueryResponse(), opt=self.options)
 
 
     def caFetchAddress(self, req: caFetchAddressRequest) -> caFetchAddressResponse:
@@ -181,7 +192,7 @@ class HttpClient:
             pass caFetchAddressRequest
             returns caFetchAddressResponse
         """
-        return self.Post('ca/fetch', req, robj=caFetchAddressResponse())
+        return self.Post('ca/fetch', req, robj=caFetchAddressResponse(), opt=self.options)
 
 
     def caFormatAddress(self, req: caFormatAddressRequest) -> caFormatAddressResponse:
@@ -189,28 +200,28 @@ class HttpClient:
             pass caFormatAddressRequest
             returns caFormatAddressResponse
         """
-        return self.Post('ca/format', req, robj=caFormatAddressResponse())
+        return self.Post('ca/format', req, robj=caFormatAddressResponse(), opt=self.options)
 
-    def caValidateAddress(self, req:caValidateAddressRequest) -> caValidateAddressResponse:
+    def caValidateAddress(self, req:caValidateAddressRequest, opt: Options = None) -> caValidateAddressResponse:
         """caValidateAddress
             pass caValidateAddressRequest
             returns caValidateAddressResponse
         """
-        return self.Post('ca/validate', req, robj=caValidateAddressResponse())
+        return self.Post('ca/validate', req, robj=caValidateAddressResponse(), opt=self.options)
 
     def caProcessCorrection(self, req: caAddressRequest) -> caCorrectionResponse:
         """caProcessCorrection
             pass caAddressRequest
             returns caCorrectionResponse req
         """
-        return self.Post('ca/correction', req, robj=caCorrectionResponse())
+        return self.Post('ca/correction', req, robj=caCorrectionResponse(), opt=self.options)
 
     def caProcessParse(self, req: caAddressRequest) -> caParseResponse:
         """caProcessParse
             pass caAddressRequest
             returns caParseResponse req
         """
-        return self.Post('ca/correction', req, robj=caParseResponse())
+        return self.Post('ca/correction', req, robj=caParseResponse(), opt=self.options)
         
     def caProcessSearch(self, req: caAddressRequest) -> caSearchResponse:
         """
@@ -218,7 +229,7 @@ class HttpClient:
             pass caAddressRequest
             returns caSearchResponse req
         """
-        return self.Post('ca/search', req, robj=caSearchResponse())
+        return self.Post('ca/search', req, robj=caSearchResponse(), opt=self.options)
         
 
     # US ProcessAddress calls

@@ -27,6 +27,7 @@ class caTypeaheadRequest:
 	max_returned: int
 	tokenize_qry: bool
 
+
 class caTypeaheadResponse:
 	addr_num: int
 	unit_num: str
@@ -39,6 +40,69 @@ class caTypeaheadResponse:
 	t_exec_ms: int
 	status_flag: str
 	status_messages: str
+
+
+class caTypeaheadFetchRequest:
+	"""
+	id
+	Fetch addr using the id (returned by typeahead)
+		
+	autocorrect
+	Enable autocorrect/optimize to call ca/correction on your behalf.
+	Note that the passed options are used when making this call.
+		
+	return_components
+	Return all discrete components of the returned addresses.
+	(This includes any modified components from an auto-correction request.)
+	"""
+	id: str
+	autocorrect: bool
+	return_components: bool
+	street_num: int
+	street_suffix: str
+	unit_num: str
+	postal_code: str
+
+
+class caTypeaheadFetchResponse:
+	"""
+	address_line is required
+		
+	city, province and postal code are optional and will restrict the search
+		
+	unidentified_component is valid only if auto-correct was requested
+		
+	components is valid only if return_components was set in the request
+				
+	"""
+	address_line: str
+	city: str
+	province: str
+	postal_code: str
+	unidentified_component: str
+	addr_rec: dict
+	components: dict
+	function_messages: list
+	status_flag: str
+	status_messages: str
+
+
+class Options(object):
+	preferredLanguageStyle: str
+	userLanguage: str
+	printMessageNumbers: str
+	maximumTryMessages: int
+	errorTolerance: int
+	preferredUnitDesignatorKeyword: str
+	preferredUnitDesignatorStyle: str
+	outputFormatGuide: str
+	exceptionReportLevel: str
+	optimizeAddress: str
+	printInformationMessages: bool
+	printChangeMessages: bool
+	printErrorMessages: bool
+	printTryMessages: bool
+	printOptimizeMessages: bool
 
 
 class caAddress:
@@ -268,9 +332,9 @@ class caCorrectionResponse:
 	"""
 	status_flag = ''
 	* V = Submitted address is Valid
-	 * C = Submitted address is Corrected
-	 * N = Submitted address is Not correct
-	 * F = Submitted address is Foreign
+	* C = Submitted address is Corrected
+	* N = Submitted address is Not correct
+	* F = Submitted address is Foreign
 	"""
 
 	def __init__(self):
@@ -404,136 +468,98 @@ class caQueryRequest:
 	 Output: Returns pairs of records in the output array <br/>
 	  - 132-byte format range records
 	 	- 232-byte CPC raw data range records
-	 
-	 
+	 	 
 	 12. Text Record Search <br/>
 	 Input: Requires postal code <br/>
 	 Output: Returns additional text information in the output array <br/>
-	 
 	 
 	 13. Postal Code Search <br/>
 	 Input: Requires postal code <br/>
 	 Output: Returns records in the output array <br/>
 	  - 232-byte CPC raw data range records
-	 
-	 
+
 	 14. CPC Raw Data Range Record Format <br/>
 	 Input: Requires CPC raw data range record in address line field <br/>
 	 Output: Returns two 63-byte format address records in output array <br/>
-	 
-	 
+
 	 16. Postal Code Search <br/>
 	 Input: City and province <br/>
 	 Output: Returns postal codes in the output array <br/>
-	 
-	 
+
 	 20. Rural Address Search all types (GD/ PO BOX/RR) <br/>
 	 Input: City and province (optional) <br/>
 	 Output: Returns pairs of records in the output array
 	  - 132-byte format range records *
 	  - 232-byte CPC raw data range records *
-	 
-	 
+
 	 21. Urban Address Search - ‘STREET’ types <br/>
 	 Input: Minimum requirement: street name and city. Additional components such as civic number, street type and province will yield more specific results. Use address line field for input. <br/>
 	 Output: Returns pairs of records in the output array
 	  - 132-byte format range records
 	  - 232-byte CPC raw data range records
-	 	
-	 	
+
 	 23. Rural Address Search ‘PO BOX’ types <br/>
 	 Input: Minimum requirement: city. Additional components such as PO BOX number and province will yield more specific results. Use address line field for input. <br/>
 	 Output: Returns pairs of records in the output array
 	  - 132-byte format range records
 	  - 232-byte CPC raw data range records
-	 
-	 
+
 	 24. Rural Address Search ‘RR/SS/MR’ types <br/>
 	 Input: Minimum requirement: city. Additional components such as route service number and province will yield more specific results. Use address line field for input. <br/>
 	 Output: Returns pairs of records in the output array
 	  - 132-byte format range records
 	  - 232-byte CPC raw data range records
-	 	
-	 	
+
 	 25. Rural Address Search ‘GD’ types <br/>
 	 Input: Minimum requirement: city. Additional components such as province will yield more specific results. Use address line field for input. <br/>
 	 Output: Returns pairs of records in the output array
 	  - 132-byte format range records
 	  - 232-byte CPC raw data range records
-	 	
-	 	
+	 	 	
 	 26. CPC Raw Data Range Search <br/>
 	 Input: Requires CPC raw data range record. Use address line field for input. <br/>
 	 Output: Returns all address matches in CPC raw data range record format in the output array. <br/>
-	 
-	 
+	 	 
 	 31. Return street type table entries.
-	 
-	 
 	 32. Return street direction table entries.
-	 
-	 
 	 33. Return route service type description table entries.
-	 
-	 
 	 34. Return province code table entries.
-	 
-	 
 	 35. Return service type table entries.
-	 
-	 
 	 36. Return delivery installation type table entries.
-	 
-	 
 	 37. Return country code table entries.
-	 
-	 
 	 38. Return US state code table entries.
-	 
-	 
 	 39. Return unit designator table entries.
-	 
 	 
 	 310. Street name search <br/>
 	 Input: Partial street name. Use street name field for input. <br/>
 	 Output: Matching street name table records in the output array <br/>
 	 
-	 
 	 311. Urban municipality name search <br/>
 	 Input: Partial municipality name. Use municipality name field for input. <br/>
 	 Output: Matching municipality name table records in the output array. <br/>
-	 
 	 
 	 312. Rural municipality name search <br/>
 	 Input: Partial rural municipality name. Use municipality name field for input. <br/>
 	 Output: Matching municipality name table records in the output array. <br/>
 	 
-	 
 	 313. Urban and Rural municipality name search <br/>
 	 Input: Partial municipality name. Use municipality name field for input. <br/>
 	 Output: Matching municipality name table records in the output array. <br/>
-	 
 	 
 	 314. Municipality abbreviations search <br/>
 	 Input: Official municipality name and province. <br/>
 	 Output: Municipality abbreviations. <br/>
 	 
-	 
 	 315. Return urban extra information table entries
-	 
-	 
 	 316. Return rural extra information table entries
-	 
 	 
 	 42. Text file search <br/>
 	 Input: Text string in address line field. <br/>
 	 Output: Postal Code and CPC Text information (company name, building name, etc). <br/>
 	 
-	 
 	 43. Municipalities within province <br/>
 	 Input: Municipality name (may be partial) and province. <br/>
 	 Output: All municipalities within province starting with input municipality name string. This may be effective for implementing a "drill down" feature. <br/>
-	 
 	 
 	 44. Street names within city and province <br/>
 	 Input: Street name (may be partial) in address line field and municipality and province. <br/>
@@ -552,31 +578,14 @@ class caQueryRequest:
 	 - 232-byte CPC raw data range records
 	 QO controls the sort order of the output data <br/>
 	 
-	 
 	 61. (71) Province : Municipality : Wildcard Street Name
-	 
-	 
 	 62. (72) Wildcard Street Name: Municipality : Province
-	 
-	 
 	 63. (73) Province : Wildcard Street Name: Municipality
-	 
-	 
 	 64. (74) Municipality : Wildcard Street Name: Province
-	 
-	 
 	 65. (75) Municipality : Province : Wildcard Street Name
-	 
-	 
 	 66. (76) Wildcard Street Name: Province : Municipality
-	 
-	 
 	 67. (77) Province : Municipality : Simple Street Name
-	 
-	 
 	 68. (78) Simple Street Name : Municipality : Province
-	 
-	 
 	 69. (79) Simple Street Name (No civic number)
 	 
 	"""
@@ -757,7 +766,6 @@ class usSearchResponse:
 		self.status_flag = ''
 		self.status_messages = ''
 		self.function_messages = []
-
 
 
 # not used
