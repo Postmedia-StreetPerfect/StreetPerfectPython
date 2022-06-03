@@ -18,11 +18,29 @@ def InString(param_str):
 
 
 class XpcClient:
-	_def_constr = b"ServiceAddress=127.0.0.1;ServicePort=1330;"
+	_def_constr = "ServiceAddress=127.0.0.1;ServicePort=1330;"
 	_def_win_dll = "SpaaSqaXpcClientNim64.dll"
 	_def_linux_so = "libSpaaSqaXpcClientNim64.so"
 
-	def __init__(self, connectionString = _def_constr, dll=None, debug=False):
+	_opt_fields = {
+        'preferredLanguageStyle' :          {'opt_name': 'PreferredLanguageStyle', 'opt_type': 'str'},
+        'userLanguage' :                    {'opt_name': 'UserLanguage', 'opt_type': 'str'},
+        'printMessageNumbers' :             {'opt_name': 'PrintMessageNumbers', 'opt_type': 'str'},
+        'maximumTryMessages' :              {'opt_name': 'MaximumTryMessages', 'opt_type': 'int'},
+        'errorTolerance' :                  {'opt_name': 'ErrorTolerance', 'opt_type': 'int'},
+        'preferredUnitDesignatorKeyword' :  {'opt_name': 'PreferredUnitDesignatorKeyword', 'opt_type': 'str'},
+        'preferredUnitDesignatorStyle' :    {'opt_name': 'PreferredUnitDesignatorStyle', 'opt_type': 'str'},
+        'outputFormatGuide' :               {'opt_name': 'OutputFormatGuide', 'opt_type': 'str'},
+        'exceptionReportLevel' :            {'opt_name': 'ExceptionReportLevel', 'opt_type': 'str'},
+        'optimizeAddress' :                 {'opt_name': 'OptimizeAddress', 'opt_type': 'str'},
+        'printInformationMessages' :        {'opt_name': 'PrintInformationMessages', 'opt_type': 'bool'},
+        'printChangeMessages' :             {'opt_name': 'PrintChangeMessages', 'opt_type': 'bool'},
+        'printErrorMessages' :              {'opt_name': 'PrintErrorMessages', 'opt_type': 'bool'},
+        'printTryMessages' :                {'opt_name': 'PrintTryMessages', 'opt_type': 'bool'},
+        'printOptimizeMessages' :           {'opt_name': 'PrintOptimizeMessages', 'opt_type': 'bool'},
+    }
+
+	def __init__(self, connectionString = _def_constr, dll=None, opt=None, debug=False):
 
 		if dll is None:
 			path = os.path.dirname(__file__)
@@ -30,10 +48,38 @@ class XpcClient:
 				dll = os.path.join(path, self._def_win_dll)
 			else:
 				dll = os.path.join(path, self._def_linux_so)
-
+		
+		self.SetOptions(opt)
 		self.hDll = ctypes.cdll.LoadLibrary(dll)
 		self.debug = debug
-		self.connectionString = connectionString if isinstance(connectionString, bytes) else connectionString.encode('ascii') 
+
+		connectionString = connectionString.strip(' \r\n\t,:;') + ';'
+		self.connectionString =  connectionString.encode('ascii')
+	
+
+	def SetOptions(self, options) -> str:
+		buf = ''
+		if options:
+			for k,v in self._opt_fields.items():
+				attr = getattr(options, k, None)
+				if attr is not None:
+					ot = v.get('opt_type')
+					if ot == 'str1':
+						if len(attr) == 1:
+							buf += f"{v['opt_name']}={attr.upper()};"
+					elif ot == 'str':
+						if len(attr) > 0:
+							buf += f"{v['opt_name']}={attr};"
+					elif ot == 'bool':
+						buf += f"{v['opt_name']}={'Y' if attr else 'N'};"
+					elif ot == 'int':
+						buf += f"{v['opt_name']}={attr};"
+		self.options_str = buf.encode('ascii')
+		return buf
+		
+
+	def GetConnectionString(self):
+		return self.connectionString + self.options_str
 
 
 	def _CheckForError(self, ret_status, ret_status_msg):
@@ -46,7 +92,7 @@ class XpcClient:
 		ret_info = OutString()
 		ret_status = OutString(10)
 		ret_status_msg = OutString(200)
-		ret = self.hDll.StreetPerfectQueryAddress(self.connectionString,
+		ret = self.hDll.StreetPerfectQueryAddress(self.GetConnectionString(),
 								b"99",
 								b'',
 								b'',
@@ -84,7 +130,7 @@ class XpcClient:
 		PS_ARG_out_status_messages = OutString()
 		_in_not_used = None
 
-		ret = self.hDll.StreetPerfectQueryAddress(self.connectionString,
+		ret = self.hDll.StreetPerfectQueryAddress(self.GetConnectionString(),
 				InString(req.query_option),
 				InString(req.address_line),
 				InString(req.city),
@@ -116,7 +162,7 @@ class XpcClient:
 		PS_ARG_out_status_flag = OutString()
 		PS_ARG_out_status_messages = OutString()
 
-		ret = self.hDll.StreetPerfectFetchAddress(self.connectionString, 
+		ret = self.hDll.StreetPerfectFetchAddress(self.GetConnectionString(), 
 										InString(req.street_number),
 										InString(req.unit_number),
 										InString(req.postal_code)
@@ -150,7 +196,7 @@ class XpcClient:
 		PS_ARG_out_status_messages = OutString()
 		_in_not_used = b""
 
-		self.hDll.StreetPerfectFormatAddress(self.connectionString
+		self.hDll.StreetPerfectFormatAddress(self.GetConnectionString()
 									   , InString(req.address_line)
 									   , InString(req.city)
 			, InString(req.province), InString(req.postal_code)
@@ -183,7 +229,7 @@ class XpcClient:
 		PS_ARG_out_status_messages = OutString()
 		_in_not_used = b""
 			
-		ret = self.hDll.StreetPerfectValidateAddress(self.connection_string
+		ret = self.hDll.StreetPerfectValidateAddress(self.GetConnectionString()
 							, InString(req.address_line), InString(req.city)
 			, InString(req.province), InString(req.postal_code)
 			, _in_not_used #req.country
@@ -218,7 +264,7 @@ class XpcClient:
 		_in_not_used = b""
 		_out_not_used = OutString(10)
 
-		ret = self.hDll.StreetPerfectProcessAddress(self.connectionString, b"CAN_AddressCorrection"
+		ret = self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"CAN_AddressCorrection"
 			, InString(req.recipient), InString(_in_not_used), InString(req.address_line), InString(req.city)
 			, InString(req.province), InString(req.postal_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
@@ -271,7 +317,7 @@ class XpcClient:
 		_in_not_used = b""
 		_out_not_used = OutString(10)
 
-		ret = self.hDll.StreetPerfectProcessAddress(self.connectionString, b"CAN_AddressParse"
+		ret = self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"CAN_AddressParse"
 			, InString(req.recipient), _in_not_used
 			, InString(req.address_line), InString(req.city)
 			, InString(req.province), InString(req.postal_code)
@@ -344,7 +390,7 @@ class XpcClient:
 			_in_not_used = b""
 			_out_not_used = OutString(10)
 
-			self.hDll.StreetPerfectProcessAddress(self.connectionString, b"CAN_AddressSearch"
+			self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"CAN_AddressSearch"
 				, InString(req.recipient), _in_not_used
 				, InString(req.address_line)
 				, InString(req.city)
@@ -411,7 +457,7 @@ class XpcClient:
 
 		_out_not_used = OutString(10)
 
-		self.hDll.StreetPerfectProcessAddress(self.connectionString, b"USA_AddressCorrection"
+		self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressCorrection"
 			, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city), InString(req.state), InString(req.zip_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
 			, PS_USA_out_firm_name.s
@@ -466,7 +512,7 @@ class XpcClient:
 
 		_out_not_used = OutString(10)
 
-		self.hDll.StreetPerfectProcessAddress(self.connectionString, b"USA_AddressParse"
+		self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressParse"
 			, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city)
 			, InString(req.state), InString(req.zip_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
@@ -530,7 +576,7 @@ class XpcClient:
 
 			_out_not_used = OutString(10)
 
-			self.hDll.StreetPerfectProcessAddress(self.connectionString, b"USA_AddressSearch"
+			self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressSearch"
 				, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city)
 				, InString(req.state), InString(req.zip_code)
 				, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
@@ -597,7 +643,7 @@ class XpcClient:
 
 		_out_not_used = OutString(10)
 
-		self.hDll.StreetPerfectProcessAddress(self.connectionString, b"USA_DeliveryInformation"
+		self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_DeliveryInformation"
 			, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city)
 			, InString(req.state), InString(req.zip_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
