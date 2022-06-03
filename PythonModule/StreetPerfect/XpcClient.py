@@ -219,7 +219,7 @@ class XpcClient:
 		_out_not_used = OutString(10)
 
 		ret = self.hDll.StreetPerfectProcessAddress(self.connectionString, b"CAN_AddressCorrection"
-			, InString(req.recipient), InString(req._in_not_used), InString(req.address_line), InString(req.city)
+			, InString(req.recipient), InString(_in_not_used), InString(req.address_line), InString(req.city)
 			, InString(req.province), InString(req.postal_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
 			, PS_CAN_out_recipient.s, _out_not_used.s, PS_CAN_out_address_line.s, PS_CAN_out_city.s

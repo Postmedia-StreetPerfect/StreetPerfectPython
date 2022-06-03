@@ -221,7 +221,7 @@ class HttpClient:
             pass caAddressRequest
             returns caParseResponse req
         """
-        return self.Post('ca/correction', req, robj=caParseResponse(), opt=self.options)
+        return self.Post('ca/parse', req, robj=caParseResponse(), opt=self.options)
         
     def caProcessSearch(self, req: caAddressRequest) -> caSearchResponse:
         """

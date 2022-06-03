@@ -99,11 +99,13 @@ def Http_Test():
         # or you can optionally use 'with' when creating the client
         client.Close()
 
+
+
+
         # optional syntax to close the client when out of scope
         with HttpClient(_sp_client_id, _sp_api_key, use_dev_site=True, verify=_verify, opt=options) as client:
             info = client.Info()
             print("\n".join(info.info))
-
 
 
 
