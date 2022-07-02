@@ -120,7 +120,6 @@ def Http_Test():
         # or you can optionally use 'with' when creating the client
         client.Close()
 
-
         # optional syntax to close the client when out of scope
         with HttpClient(_sp_client_id, _sp_api_key, use_dev_site=True, verify=_verify, opt=options) as client:
             info = client.Info()
@@ -128,6 +127,7 @@ def Http_Test():
 
     except StreetPerfectException as e:
         print(f"StreetPerfectHttpException: {e}")
+    client.Close()
 
 
 def Http_Batch_Test():
@@ -145,7 +145,6 @@ def Http_Batch_Test():
 
         info = client.Info()
         print("\n".join(info.info))
-
 
         # upload as a multipart-form
         x = client.caBatchUploadForm(r'StreetPerfectBatchInput_csv_small.zip'
@@ -196,8 +195,9 @@ def Http_Batch_Test():
     except StreetPerfectException as e:
         print(f"StreetPerfectHttpException: {e}")
 
+    client.Close()
 
 if __name__ == '__main__':
     #XPC_Test()
-    #Http_Test()
-    Http_Batch_Test()
+    Http_Test()
+    #Http_Batch_Test()
