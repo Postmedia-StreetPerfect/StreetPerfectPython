@@ -3,7 +3,7 @@
 cd %~p0
 
 del /Q/S "dist\*.*"
-
+del /Q/S "build\*.*"
 :: bmiller oct 2021
 :: build a source or wheel distro, wheel is always better
 ::python setup.py sdist

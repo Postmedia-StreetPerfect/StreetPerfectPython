@@ -2,6 +2,7 @@
 cd "${0%/*}"
 
 rm -r dist
+rm -r build
 
 # bmiller oct 2021
 # build a source or wheel distro, wheel is always better

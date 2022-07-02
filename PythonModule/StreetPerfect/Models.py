@@ -2,6 +2,96 @@
 # models represent the input (request) and the output (response) parameters of
 # all api calls
 
+
+class BatchRunInfo:
+	exitCode: int
+	exitStatus: str
+	exitMsg: str
+	runTimeSecs: int
+	runTimeStart: str
+	totalProcessed: int
+	validAddresses: int
+	invalidAddresses: int
+	questionableLvrAddresses: int
+	questionableRuralAddresses: int
+
+class BatchStatus:
+	status: str
+	runInfo: BatchRunInfo
+
+class BatchUploadRequest:
+	def __init__(self, data):
+		self.data = data
+
+class BatchUploadResponse:
+	msg: str
+
+class BatchConfig:
+
+	def __init__(self, **kwargs):
+		self.preferredUnitDesignatorKeyword = 'SUITE'
+		self.preferredUnitDesignatorStyle = 'K'
+		self.outputFormatGuide = 'N'
+		self.exceptionReportLevel = 'D'
+		self.printMessageNumbers = 'N'
+		self.printInformationMessages = True
+		self.printChangeMessages = True
+		self.printErrorMessages = True
+		self.printTryMessages = True
+		self.printOptimizeMessages = True
+		self.optimizeAddress = 'S'
+		self.processErrors = 'N'
+		self.errorTolerance = 2
+		self.maximumTryMessages = 5
+		self.correctLvrAddress = 'Q'
+		self.correctLvrAmbiguity = 'Q'
+		self.correctRuralAddress = 'Q'
+		self.reportAllUnidentified = True
+		self.reportOrphanUdkAsExtraInfo = True
+		self.function = 'C'
+		self.outputStatusFlag = True
+		self.fileFormat = 'C'
+		self.addressFormat = 'L'
+		self.headerRecord = 1
+		self.headerRecordFields = 0
+		self.headerRecordLength = 0
+		self.firstRecord = 2
+		self.recordsToProcess = 0
+		self.fieldsPerRecord = 9
+		self.outputQuotedData = False
+		self.formatAllInputRecords = False
+		self.postalCodeFormatGuide = 'D'
+		self.defaultCountryCode = 'CAN'
+		self.overRideInputCountryCode = True
+		self.defaultLanguageCode = 'I'
+		self.overRideInputLanguageCode = True
+		self.inputKeyOffset = 0
+		self.inputKeyLength = 0
+		self.inputLanguageOffset = 0
+		self.inputLanguageLength = 0
+		self.inputRecipientOffset = 0
+		self.inputRecipientLength = 0
+		self.inputStreetNumberOffset = 0
+		self.inputStreetNumberLength = 0
+		self.inputStreetNameOffset = 0
+		self.inputStreetNameLength = 0
+		self.inputUnitNumberOffset = 0
+		self.inputUnitNumberLength = 0
+		self.inputAddressLineOffset = 0
+		self.inputAddressLineLength = 0
+		self.inputCityOffset = 0
+		self.inputCityLength = 0
+		self.inputProvinceStateOffset = 0
+		self.inputProvinceStateLength = 0
+		self.inputPostalZipCodeOffset = 0
+		self.inputPostalZipCodeLength = 0
+		self.inputCountryOffset = 0
+		self.inputCountryLength = 0
+		# set any fields passed in
+		for k,v in kwargs.items():
+			if hasattr(self, k):
+				setattr(self, k, v)
+
 class TokenRequest:
 	clientId: str
 	clientSecret: str
