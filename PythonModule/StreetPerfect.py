@@ -1,4 +1,4 @@
-import logging, json, time
+import logging, json, time, os
 from StreetPerfect.XpcClient import XpcClient
 from StreetPerfect.HttpClient import HttpClient
 from StreetPerfect import StreetPerfectException
@@ -22,7 +22,8 @@ try:
     }
     """
     import my_creds
-    creds = my_creds.creds['local']
+    #creds = my_creds.creds['local']
+    creds = my_creds.creds['dev']
     _sp_client_id = creds['sp_client_id']
     _sp_api_key = creds['sp_api_key']
     _sp_url = creds['url']
@@ -146,9 +147,10 @@ def Http_Batch_Test():
         info = client.Info()
         print("\n".join(info.info))
 
+        print(os.getcwd())
+
         # upload as a multipart-form
-        x = client.caBatchUploadForm(r'StreetPerfectBatchInput_csv_small.zip'
-                                     , isZip=True)
+        x = client.caBatchUploadForm(r'PythonModule/StreetPerfectBatchInput_csv_small.txt', isZip=False)
         print(f"caBatchUploadForm response: {x.msg}")
 
         # or upload the batch input file directly as a string
@@ -199,5 +201,5 @@ def Http_Batch_Test():
 
 if __name__ == '__main__':
     #XPC_Test()
-    Http_Test()
-    #Http_Batch_Test()
+    #Http_Test()
+    Http_Batch_Test()
