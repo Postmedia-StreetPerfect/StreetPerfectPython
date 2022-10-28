@@ -122,6 +122,7 @@ class HttpClientBase:
 			data.options = opt.__dict__
 
 		token = self.GetToken()
+		err=''
 		self.session.headers.update({'Authorization': f'Bearer {token}'})
 		ret = self.session.post(uri
 			, data=json.dumps(data.__dict__), verify=self.verfy, timeout=self.timeout)
@@ -133,8 +134,13 @@ class HttpClientBase:
 				robj.__dict__.update(resp)
 				return robj
 			return resp
-		
-		raise StreetPerfectHttpException(ret.status_code, uri, f'post error; uri:{uri}, code:{ret.status_code}, err:{ret.reason}')
+		elif ret.status_code == 502:
+			if 'json' in ret.headers['Content-Type']:
+				resp = ret.json()
+				if 'err' in resp:
+					err = resp["err"]
+
+		raise StreetPerfectHttpException(ret.status_code, uri, f'post error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
 
 	def PostForm(self, funct, fields, files, ver=None, robj=None):
 		if ver == None:
@@ -160,14 +166,20 @@ class HttpClientBase:
 				robj.__dict__.update(resp)
 				return robj
 			return resp
+		elif ret.status_code == 502:
+			if 'json' in ret.headers['Content-Type']:
+				resp = ret.json()
+				if 'err' in resp:
+					err = resp["err"]
 		
-		raise StreetPerfectHttpException(ret.status_code, uri, f'post error; uri:{uri}, code:{ret.status_code}, err:{ret.reason}')
+		raise StreetPerfectHttpException(ret.status_code, uri, f'post error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
 
 	def Get(self, funct, ver=None, robj=None, stream=False):
 		if ver == None:
 			ver = self.apiVer
 		uri = f'{self.baseAddr}{ver}/{funct}'
 		token = self.GetToken()
+		err = ''
 		self.session.headers.update({'Authorization': f'Bearer {token}'})
 		ret = self.session.get(uri, stream=stream, verify=self.verfy, timeout=self.timeout)
 		if ret.status_code == 200:
@@ -183,8 +195,13 @@ class HttpClientBase:
 				return ret.text
 			else:
 				return ret.content
-		
-		raise StreetPerfectHttpException(ret.status_code, uri, f'get error; uri:{uri}, code:{ret.status_code}, err:{ret.reason}')
+		elif ret.status_code == 502:
+			if 'json' in ret.headers['Content-Type']:
+				resp = ret.json()
+				if 'err' in resp:
+					err = resp["err"]
+
+		raise StreetPerfectHttpException(ret.status_code, uri, f'get error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
 
 	def Delete(self, funct, ver=None, robj=None):
 		if ver == None:
@@ -201,8 +218,13 @@ class HttpClientBase:
 				robj.__dict__.update(resp)
 				return robj
 			return resp
+		elif ret.status_code == 502:
+			if 'json' in ret.headers['Content-Type']:
+				resp = ret.json()
+				if 'err' in resp:
+					err = resp["err"]
 		
-		raise StreetPerfectHttpException(ret.status_code, uri, f'delete error; uri:{uri}, code:{ret.status_code}, err:{ret.reason}')
+		raise StreetPerfectHttpException(ret.status_code, uri, f'delete error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
 
 
 
