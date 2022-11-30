@@ -7,8 +7,8 @@ _ScriptVer = "v1.2"
 
 """
 # bmiller, aug 2022
-# the sp_creds.json file (not in repo) must contain one or more StreetPerfect creds in a dictionary
-# currently only the aws and dev sites have batch (dev is limited to 200 recs)
+# This is an example of how to handle running batch correction via python.
+# below is a sample sp_creds.json file, it must contain one or more StreetPerfect creds in a dictionary
 # you can override this file by passing the creds to the script
 
 {
@@ -93,7 +93,7 @@ def sp_batch(sp_api_id, sp_api_key, sp_url, cfg, input_file, out_good_recs, out_
                 if r.status not in ['Starting', 'Running']:
                     logger.info(r.runInfo)
                     break
-                time.sleep(5)
+                time.sleep(10)
 
             if r.status == 'OutputReady':
                 client.caBatchDownloadTo('log', 'StreetPerfectBatch.log')

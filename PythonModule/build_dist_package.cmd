@@ -9,5 +9,5 @@ del /Q/S "build\*.*"
 ::python setup.py sdist
 python setup.py bdist_wheel
 
-echo You can install the package using PIP: pip install streetperfect-11.0.0-py3-none-any.whl
+echo You can install the package using PIP: pip install streetperfect-12.0.0-py3-none-any.whl
 pause

@@ -5,7 +5,7 @@ This is the StreetPerfect Python Client module. You can build this wheel by runn
 
 Then install it using pip:
 
-pip install streetperfect-11.0.0-py3-none-any.whl
+pip install streetperfect-12.0.0-py3-none-any.whl
 
 This client allows you to connect to a StreetPerfect server via the propreitary StreetPerfect XPC protocol. 
 Both the Windows and Linux XPC libs are installed.
@@ -17,4 +17,4 @@ Alternately you can load the client from the StreetPerfect folder without instal
 
 Python 3 required.
 
-See the StreetPerfect.py for an example of using this module.
+See the StreetPerfectExample.py for an example of using this module and both clients.
