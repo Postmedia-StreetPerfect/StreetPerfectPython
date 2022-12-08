@@ -26,7 +26,7 @@ _ScriptVer = "v1.2"
 
 """
 
-logger = None
+logger = None #set in main
 
 def sp_batch(sp_api_id, sp_api_key, sp_url, cfg, input_file, out_good_recs, out_bad_recs, verify_ssl=True):
     '''
