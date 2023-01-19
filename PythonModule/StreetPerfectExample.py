@@ -9,24 +9,24 @@ try:
     """
     creds = {
 	    'dev' : {
-		    'sp_client_id' : 'bmiller@postmedia.com',
-		    'sp_api_key' : 'dev key',
-		    'url' : 'https://apidev.streetperfect.com/api/',
+		    'api_id' : 'bmiller@postmedia.com',
+		    'api_key' : 'dev key',
+		    'api_url' : 'https://apidev.streetperfect.com/api/',
 		    },
         'prod' : {
- 		    'sp_client_id' : 'bmiller@postmedia.com',
-		    'sp_api_key' : 'prod key',
-		    'url' : 'https://api.streetperfect.com/api/',
+ 		    'api_id' : 'bmiller@postmedia.com',
+		    'api_key' : 'prod key',
+		    'api_url' : 'https://api.streetperfect.com/api/',
 		    },
         }
     }
     """
-    import my_creds
+    import sp_creds
     #creds = my_creds.creds['local']
-    creds = my_creds.creds['dev']
-    _sp_client_id = creds['sp_client_id']
-    _sp_api_key = creds['sp_api_key']
-    _sp_url = creds['url']
+    creds = sp_creds.creds['local']
+    _sp_client_id = creds['api_id']
+    _sp_api_key = creds['api_key']
+    _sp_url = creds['api_url']
 except:
     _sp_client_id = 'your id (email)'
     _sp_api_key = 'your api key'
@@ -117,6 +117,29 @@ def Http_Test():
         taf_resp = client.caTypeheadFetch(req)
         print(taf_resp.components)
 
+
+        caReq = caAddressRequest()
+        caReq.address_line = "102220 Queen St Z"
+        caReq.city="toronto"
+        caReq.province="on"
+        caReq.postal_code = "M5H 2N1"
+        resp = client.caProcessCorrection(caReq)
+        print (f"caProcessCorrection flag={resp.status_flag}\n{resp.function_messages}\n")
+
+        
+        resp = client.caProcessParse(caReq)
+        print (f"caProcessParse flag={resp.status_flag}\n{resp.function_messages}\n")
+
+
+        caReq = caAddressRequest()
+        caReq.address_line = "100 Queen"
+        caReq.postal_code = "M5H2N1"
+        resp = client.caProcessSearch(caReq)
+        print (f"caProcessSearch = stat:{resp.status_flag}, {resp.status_messages}\n")
+
+        for addr in resp.response_address_list:
+            print(str(addr))
+
         # you must call Close to stop the background token refresh timer
         # or you can optionally use 'with' when creating the client
         client.Close()
@@ -201,5 +224,5 @@ def Http_Batch_Test():
 
 if __name__ == '__main__':
     #XPC_Test()
-    #Http_Test()
-    Http_Batch_Test()
+    Http_Test()
+    #Http_Batch_Test()
