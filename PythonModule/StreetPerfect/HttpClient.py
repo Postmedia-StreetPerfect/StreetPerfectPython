@@ -46,7 +46,7 @@ class HttpClient(HttpClientBase):
 		"""
 		return self.Post('ca/typeahead/fetch', req, robj=caTypeaheadFetchResponse(), opt=self.options)
 
-	def Info(self):
+	def Info(self) -> GetInfoResponse:
 		"""
 		Info
 			returns GetInfoResponse
