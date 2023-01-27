@@ -110,7 +110,7 @@ class HttpClientBase:
 		self.refreshToken = resp['refreshToken']
 		self.expires = (resp['expires'] -1) * 60 
 		self.lastRefreshed = datetime.datetime.now()
-		print("token refreshed")
+		logger.debug("token refreshed")
 
 	def BuildUrl(self, funct, ver=None):
 		if ver == None:
