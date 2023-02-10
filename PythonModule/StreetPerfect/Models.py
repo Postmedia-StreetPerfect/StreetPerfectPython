@@ -403,7 +403,7 @@ class usAddress:
 class GetInfoResponse:
 
 	def __init__(self):
-		self.info = []
+		self.info = {}
 		self.status_flag = ''
 		self.status_messages = ''
 

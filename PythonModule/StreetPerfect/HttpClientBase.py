@@ -110,12 +110,18 @@ class HttpClientBase:
 		self.refreshToken = resp['refreshToken']
 		self.expires = (resp['expires'] -1) * 60 
 		self.lastRefreshed = datetime.datetime.now()
-		print("token refreshed")
+		logger.debug("token refreshed")
 
-	def Post(self, funct, data, ver=None, robj=None, opt=None):
+	def BuildUrl(self, funct, ver=None):
 		if ver == None:
 			ver = self.apiVer
-		uri = f'{self.baseAddr}{ver}/{funct}'
+		if ver:
+			ver += '/'
+		return f'{self.baseAddr}{ver}{funct}'
+
+
+	def Post(self, funct, data, ver=None, robj=None, opt=None):
+		uri = self.BuildUrl(funct, ver)
 		logger.debug('post %s', uri)
 
 		if opt:
@@ -143,9 +149,7 @@ class HttpClientBase:
 		raise StreetPerfectHttpException(ret.status_code, uri, f'post error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
 
 	def PostForm(self, funct, fields, files, ver=None, robj=None):
-		if ver == None:
-			ver = self.apiVer
-		uri = f'{self.baseAddr}{ver}/{funct}'
+		uri = self.BuildUrl(funct, ver)
 		logger.debug('post %s', uri)
 
 		token = self.GetToken()
@@ -175,9 +179,7 @@ class HttpClientBase:
 		raise StreetPerfectHttpException(ret.status_code, uri, f'post error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
 
 	def Get(self, funct, ver=None, robj=None, stream=False):
-		if ver == None:
-			ver = self.apiVer
-		uri = f'{self.baseAddr}{ver}/{funct}'
+		uri = self.BuildUrl(funct, ver)
 		token = self.GetToken()
 		err = ''
 		self.session.headers.update({'Authorization': f'Bearer {token}'})
@@ -204,9 +206,7 @@ class HttpClientBase:
 		raise StreetPerfectHttpException(ret.status_code, uri, f'get error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
 
 	def Delete(self, funct, ver=None, robj=None):
-		if ver == None:
-			ver = self.apiVer
-		uri = f'{self.baseAddr}{ver}/{funct}'
+		uri = self.BuildUrl(funct, ver)
 		token = self.GetToken()
 		self.session.headers.update({'Authorization': f'Bearer {token}'})
 		ret = self.session.delete(uri, verify=self.verfy, timeout=self.timeout)
