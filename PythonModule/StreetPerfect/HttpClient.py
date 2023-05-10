@@ -200,9 +200,8 @@ class HttpClient(HttpClientBase):
 
 
 	def caBatchClean(self, id: str):
-		"""caStopBatchTask, stop a running batch task
-			Return status of the batch task
-			returns BatchStatus
+		"""caBatchClean, deletes all input and output files
+			returns true/false
 		"""
 		r = self.Delete(f'ca/batch/clean/{id}')
 		return r.status_code == 200
