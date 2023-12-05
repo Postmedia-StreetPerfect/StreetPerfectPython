@@ -23,7 +23,7 @@ try:
     """
     import sp_creds
     #creds = my_creds.creds['local']
-    creds = sp_creds.creds['local']
+    creds = sp_creds.creds['prod']
     _sp_client_id = creds['api_id']
     _sp_api_key = creds['api_key']
     _sp_url = creds['api_url']
@@ -224,5 +224,5 @@ def Http_Batch_Test():
 
 if __name__ == '__main__':
     #XPC_Test()
-    Http_Test()
-    #Http_Batch_Test()
+    #Http_Test()
+    Http_Batch_Test()
