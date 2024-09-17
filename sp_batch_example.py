@@ -17,7 +17,7 @@ try:
 
     logger.info('Running StreetPerfect Batch Address Verifier')
 
-    client = HttpClient(sp_api_id, sp_api_key, url='http://localhost:8000/api/')
+    client = HttpClient(sp_api_id, sp_api_key) #, url='http://localhost:8000/api/')
 
     info = client.Info()
     logger.info('\n'.join(f'{k}={v}' for k, v in info.info.items()))
