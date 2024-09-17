@@ -119,19 +119,14 @@ class HttpClientBase:
 			ver += '/'
 		return f'{self.baseAddr}{ver}{funct}'
 
-
-	def Post(self, funct, data, ver=None, robj=None, opt=None):
+	def PostRaw(self, funct, data, robj=None, headers=None, ver=None):
 		uri = self.BuildUrl(funct, ver)
 		logger.debug('post %s', uri)
-
-		if opt:
-			data.options = opt.__dict__
-
 		token = self.GetToken()
 		err=''
 		self.session.headers.update({'Authorization': f'Bearer {token}'})
 		ret = self.session.post(uri
-			, data=json.dumps(data.__dict__), verify=self.verfy, timeout=self.timeout)
+			, data=data, verify=self.verfy, timeout=self.timeout, headers=headers)
 		if ret.status_code == 200:
 			if not ret.content:
 				return ret
@@ -139,7 +134,7 @@ class HttpClientBase:
 			if robj:
 				robj.__dict__.update(resp)
 				return robj
-			return resp
+			return resp		
 		elif ret.status_code == 502:
 			if 'json' in ret.headers['Content-Type']:
 				resp = ret.json()
@@ -147,6 +142,15 @@ class HttpClientBase:
 					err = resp["err"]
 
 		raise StreetPerfectHttpException(ret.status_code, uri, f'post error; uri:{uri}, code:{ret.status_code}, err:{err if err else ret.reason}')
+
+
+
+	def Post(self, funct, data, ver=None, robj=None, opt=None, headers=None):
+		if opt:
+			data.options = opt.__dict__
+
+		return self.PostRaw(funct, json.dumps(data.__dict__), ver=ver, robj=robj, headers=headers)
+
 
 	def PostForm(self, funct, fields, files, ver=None, robj=None):
 		uri = self.BuildUrl(funct, ver)

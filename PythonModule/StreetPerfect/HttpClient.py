@@ -1,4 +1,5 @@
 from asyncio import streams
+from wsgiref import headers
 import requests, datetime, json, threading, time, urllib3, logging
 from . HttpClientBase import HttpClientBase
 from . Models import *
@@ -147,7 +148,7 @@ class HttpClient(HttpClientBase):
 		return self.Post('ca/batch/upload', BatchUploadRequest(data), robj=BatchUploadResponse())
 
 	def caBatchUploadForm(self, filename: str, encoding = "utf8", isZip=False ) -> bool:
-		"""caBatchUpload, Upload batch input string data.
+		"""caBatchUploadForm, Upload batch input file as an http form.
 		"""
 		files = {'file': open(filename, 'rb')}
 		fields = {
@@ -155,6 +156,12 @@ class HttpClient(HttpClientBase):
 			'is_zipped': isZip
 			}
 		return self.PostForm('ca/batch/upload/form', files=files, fields=fields, robj=BatchUploadResponse())
+
+	def caBatchUploadCsv(self, csv, encoding = "utf8", isZip=False ) -> bool:
+		"""caBatchUploadCsv, Upload batch input CSV content directly in post data.
+		"""
+		content_type = 'text/csv' if not isZip else 'application/zip'
+		return self.PostRaw('ca/batch/upload/csv', open(csv, 'rb'), headers={'Content-Type': content_type},  robj=BatchUploadResponse())
 
 	def caBatchDownloadTo(self, id: str, local_filename: str ) -> bool:
 		"""caBatchDownload, Download batch output results
