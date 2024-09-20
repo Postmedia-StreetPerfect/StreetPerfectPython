@@ -8,10 +8,24 @@ _ScriptVer = "v1.2"
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('sp_batch')
 
-sp_api_id = ""
-sp_api_key = ""
+try:
 
-input_file= "sample_input_data.zip"
+# create an sp_creds.py containing one or more StreetPerfect api creds
+#creds = {
+#	"prod": {
+#		"api_id": "your email",
+#		"api_key": "sp api key",
+#	}
+#}
+    from sp_creds import creds
+    sp_api_id = creds['prod']['api_id']
+    sp_api_key = creds['prod']['api_key']
+except:
+    sp_api_id  = 'set these manually if you want'
+    sp_api_key = ''
+     
+
+input_file= "sample_input_data.csv"
 
 try:
 
@@ -27,7 +41,9 @@ try:
                       inputAddressLineOffset = 3, 
                       inputCityOffset = 4, 
                       inputProvinceStateOffset = 5, 
-                      inputPostalZipCodeOffset = 6)
+                      inputPostalZipCodeOffset = 6,
+                      firstRecord = 2,
+                      headerRecord = 1)
 
 
     # check status first
@@ -55,6 +71,7 @@ try:
     #r = client.caBatchUploadForm(input_file, isZip=input_file.lower().endswith('.zip'))
     r = client.caBatchUploadCsv(input_file, isZip=input_file.lower().endswith('.zip'))
     
+
     logger.info(f'caBatchUpload response: {r.msg}')
  
     # fetch status
@@ -68,17 +85,31 @@ try:
         # start the batch task!
         logger.info('starting batch task')
         client.caBatchStartTask(cfg)
-            
+        last_log_msg = ''
+        msg = '';
         while 1:
             # now wait till its done
             # possible statuses are: Unknown, Error, Empty, Starting, Running, Stopping, Stopped, InputReady, OutputReady
 
             r = client.caBatchStatus()
-            print(f'BatchRun Status: {r.status}')
             if r.status not in ['Starting', 'Running']:
                 logger.info(r.runInfo)
-                break
-            time.sleep(10)
+                break           
+            
+            if hasattr(r, 'msg'):
+                msg = r.msg
+
+            if r.status == 'Running'and hasattr(r, 'runInfo'):
+                runtime = datetime.timedelta(seconds=r.runInfo['runTimeSecs'])
+                timeleft = datetime.timedelta(seconds=r.runInfo['estTimeLeftSecs'])
+                msg = f"Processed: {r.runInfo['totalProcessed']} recs, run time: {runtime}, est time left: {timeleft}";
+            
+            log_msg = f'BatchRun Status: {r.status} {msg}'
+            if log_msg != last_log_msg:
+                last_log_msg = log_msg
+                logger.info(log_msg)
+
+            time.sleep(3)
 
         if r.status == 'OutputReady':
             client.caBatchDownloadTo('log', 'StreetPerfectBatch.log')
