@@ -22,8 +22,8 @@ try:
     }
     """
     import sp_creds
-    #creds = my_creds.creds['local']
-    creds = sp_creds.creds['prod']
+    creds = sp_creds.creds['local']
+    #creds = sp_creds.creds['prod']
     _sp_client_id = creds['api_id']
     _sp_api_key = creds['api_key']
     _sp_url = creds['api_url']
@@ -40,8 +40,7 @@ _verify = True
 
 def XPC_Test():
     try:
-
-        client = XpcClient("ServiceAddress=127.0.0.1;ServicePort=1330")
+        client = XpcClient("ServiceAddress=127.0.0.1;ServicePort=1330;ServiceNetworkTimeout=10;ServiceNetworkBuffer=65535;")
         info = client.Info()
         print("\n".join(info.info))
 
@@ -57,7 +56,6 @@ def XPC_Test():
 
 
         #100 Queen St W, Toronto, ON M5H 2N1
-
         caReq = caAddressRequest()
         caReq.address_line = "100 Queen St Z"
         caReq.city="toronto"
@@ -75,6 +73,7 @@ def XPC_Test():
 
         for addr in resp.response_address_list:
             print(str(addr))
+
 
     except StreetPerfectException as e:
         print(f"StreetPerfectException: {e}")
@@ -223,6 +222,6 @@ def Http_Batch_Test():
     client.Close()
 
 if __name__ == '__main__':
-    #XPC_Test()
+    XPC_Test()
     #Http_Test()
-    Http_Batch_Test()
+    #Http_Batch_Test()

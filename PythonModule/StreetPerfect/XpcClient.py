@@ -107,6 +107,9 @@ class XpcClient:
 		resp.info = ret_info.ToList()
 		resp.status_flag = ret_status
 		resp.status_messages = ret_status_msg
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectQueryAddress() returned error code: {ret}"
 		return resp
 
 
@@ -128,7 +131,7 @@ class XpcClient:
 		PS_ARG_out_function_messages = OutString(buf_size)
 		PS_ARG_out_status_flag = OutString(10)
 		PS_ARG_out_status_messages = OutString()
-		_in_not_used = None
+		_in_not_used = b""
 
 		ret = self.hDll.StreetPerfectQueryAddress(self.GetConnectionString(),
 				InString(req.query_option),
@@ -145,6 +148,10 @@ class XpcClient:
 		resp.function_messages = PS_ARG_out_function_messages.ToList()
 		resp.status_flag = PS_ARG_out_status_flag.ToString()
 		resp.status_messages = PS_ARG_out_status_messages.ToString()
+
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectQueryAddress() returned error code: {ret}"
 		return resp
 
 
@@ -179,6 +186,9 @@ class XpcClient:
 		resp.status_flag = PS_ARG_out_status_flag.ToString()
 		resp.status_messages = PS_ARG_out_status_messages.ToString()
 
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectFetchAddress() returned error code: {ret}"
 		return resp
 
 
@@ -196,7 +206,7 @@ class XpcClient:
 		PS_ARG_out_status_messages = OutString()
 		_in_not_used = b""
 
-		self.hDll.StreetPerfectFormatAddress(self.GetConnectionString()
+		ret = self.hDll.StreetPerfectFormatAddress(self.GetConnectionString()
 									   , InString(req.address_line)
 									   , InString(req.city)
 			, InString(req.province), InString(req.postal_code)
@@ -215,6 +225,9 @@ class XpcClient:
 		resp.status_flag = PS_ARG_out_status_flag.ToString()
 		resp.status_messages = PS_ARG_out_status_messages.ToString()
 
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectFormatAddress() returned error code: {ret}"
 		return resp
 
 
@@ -240,6 +253,9 @@ class XpcClient:
 		resp.status_flag = PS_ARG_out_status_flag.ToString()
 		resp.status_messages = PS_ARG_out_status_messages.ToString()
 
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectValidateAddress() returned error code: {ret}"
 		return resp
 
 
@@ -285,7 +301,11 @@ class XpcClient:
 		resp.province = PS_CAN_out_province.ToString()
 		resp.extra_information = PS_CAN_out_extra_information.ToString()
 		resp.unidentified_component = PS_CAN_out_unidentified_component.ToString()
-			
+		
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectProcessAddress() returned error code: {ret}"
+
 		return resp
 
 
@@ -361,6 +381,9 @@ class XpcClient:
 		resp.extra_information = PS_CAN_out_extra_information.ToString()
 		resp.unidentified_component = PS_CAN_out_unidentified_component.ToString()
 			
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectProcessAddress() returned error code: {ret}"
 		return resp
 		
 
@@ -390,7 +413,7 @@ class XpcClient:
 			_in_not_used = b""
 			_out_not_used = OutString(10)
 
-			self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"CAN_AddressSearch"
+			ret = self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"CAN_AddressSearch"
 				, InString(req.recipient), _in_not_used
 				, InString(req.address_line)
 				, InString(req.city)
@@ -430,6 +453,11 @@ class XpcClient:
 			resp.response_count = response_count
 			resp.response_address_list = response_address_list
 			#resp.t_exec_ms = sw.ElapsedMilliseconds
+
+			if ret != 0 and not resp.status_flag:
+				resp.status_flag = 'X'
+				resp.status_messages = f"StreetPerfectProcessAddress() returned error code: {ret}"
+
 			return resp
 		
 		raise StreetPerfectException("requery failed to resp = all expected results")
@@ -457,7 +485,7 @@ class XpcClient:
 
 		_out_not_used = OutString(10)
 
-		self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressCorrection"
+		ret = self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressCorrection"
 			, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city), InString(req.state), InString(req.zip_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
 			, PS_USA_out_firm_name.s
@@ -481,6 +509,11 @@ class XpcClient:
 		resp.city = PS_USA_out_city.ToString()
 		resp.state = PS_USA_out_state.ToString()
 		resp.zip_code = PS_USA_out_zip_code.ToString()
+
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectProcessAddress() returned error code: {ret}"
+
 		return resp	
 		
 
@@ -512,7 +545,7 @@ class XpcClient:
 
 		_out_not_used = OutString(10)
 
-		self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressParse"
+		ret = self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressParse"
 			, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city)
 			, InString(req.state), InString(req.zip_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
@@ -554,6 +587,10 @@ class XpcClient:
 		resp.county_name = PS_USA_out_county_name.ToString()
 		resp.county_code = PS_USA_out_county_code.ToString()
 		
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectProcessAddress() returned error code: {ret}"
+
 		return resp
 		
 
@@ -576,7 +613,7 @@ class XpcClient:
 
 			_out_not_used = OutString(10)
 
-			self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressSearch"
+			ret = self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_AddressSearch"
 				, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city)
 				, InString(req.state), InString(req.zip_code)
 				, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
@@ -610,6 +647,11 @@ class XpcClient:
 			resp.status_messages = PS_ARG_out_status_messages.ToString()
 			resp.response_count = response_count
 			resp.response_address_list = response_address_list
+
+			if ret != 0 and not resp.status_flag:
+				resp.status_flag = 'X'
+				resp.status_messages = f"StreetPerfectProcessAddress() returned error code: {ret}"
+
 			return resp
 
 		raise StreetPerfectException("requery failed to resp = all expected results")
@@ -643,7 +685,7 @@ class XpcClient:
 
 		_out_not_used = OutString(10)
 
-		self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_DeliveryInformation"
+		ret = self.hDll.StreetPerfectProcessAddress(self.GetConnectionString(), b"USA_DeliveryInformation"
 			, InString(req.firm_name), InString(req.urbanization_name), InString(req.address_line), InString(req.city)
 			, InString(req.state), InString(req.zip_code)
 			, PS_ARG_out_status_flag.s, PS_ARG_out_status_messages.s, PS_ARG_out_function_messages.s
@@ -685,5 +727,9 @@ class XpcClient:
 		resp.pmb_designator = PS_USA_out_pmb_designator.ToString()
 		resp.pmb_number = PS_USA_out_pmb_number.ToString()
 			
+		if ret != 0 and not resp.status_flag:
+			resp.status_flag = 'X'
+			resp.status_messages = f"StreetPerfectProcessAddress() returned error code: {ret}"
+
 		return resp
 
