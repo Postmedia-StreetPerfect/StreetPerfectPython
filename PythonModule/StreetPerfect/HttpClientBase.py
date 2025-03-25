@@ -5,6 +5,10 @@ from . import StreetPerfectException
 
 logger = logging.getLogger(__name__)
 
+
+# bmiller, mar 2025, fixed Python client to handle both on-prremisies api_key and SP.com bearer token
+# simply pass api_key= to the client to enable local webapi access
+
 class StreetPerfectHttpException(StreetPerfectException):
 	def __init__(self, code, uri, msg):
 		super().__init__(msg)
@@ -20,13 +24,35 @@ class BackgroundRefreshTimer(threading.Timer):
 
 
 class HttpClientBase:
-	def __init__(self, client_id, api_key
-		, url=None, use_dev_site=False, verify=True, timeout=20
+
+	def __init__(self, client_id=None, client_secret=None, api_key=None
+		, url=None, verify=True, timeout=20
 		, ver='1', debug=False, opt=None):
+		"""
+		client_id     = your StreetPerfect username (email)
+		client_secret = your StreetPerfect api (secret) key
+		api_key       = your on-premisies server api key
+		url           = optional, url to your on-premisies server http[s]://host[:port]/api
+		verify        = optional, allows you to ignore ssl cert errors by setting False (default True)
+		timeout       = request timeout, default 20 secs
+		ver           = api version, currently 1 is the (default) only option
+		debug         = if True will add extra debug info to responses
+		opt           = default SreetPerfect request Options (see the Options class model)
+		"""
+
+		# verify the required params
+		if not api_key and (not client_secret or not client_secret):
+			raise ValueError("api_key OR client_id and client_secret params required")
+		if api_key and not url:
+			raise ValueError("api_key requires a valid url setting")
+		if api_key and (client_id or client_secret):
+			logger.warning("api_key and client_* params found, api_key takes priority, client_* settings ignored")
+
 		session = requests.Session()
 		self.session = session
 		self.apiKey=api_key
 		self.clientId=client_id
+		self.clientSecret=client_secret
 		self.debug = debug
 		self.timeout = timeout
 		self.verfy = verify
@@ -34,9 +60,7 @@ class HttpClientBase:
 			urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 		self.apiVer = ver
 		self.baseAddr = 'https://api.streetperfect.com/api/'
-		if use_dev_site:
-			self.baseAddr = 'https://apidev.streetperfect.com/api/'
-		elif url:
+		if url:
 			self.baseAddr = url.rstrip('/') + '/'
 
 		self.token = None
@@ -60,20 +84,27 @@ class HttpClientBase:
 		if self.backgroundRefreshTimer:
 			self.backgroundRefreshTimer.cancel()
 
-	def GetToken(self, force=False):
-		if not self.token or force:
-			self._NewToken()
-			if self.backgroundRefreshTimer:
-				self.backgroundRefreshTimer.cancel()
-			self.backgroundRefreshTimer = BackgroundRefreshTimer(self.expires, self._RefreshToken)
-			self.backgroundRefreshTimer.start()
-		return self.token
+	# SetAuth decides if it should use the api_key OR get a SAS token
+	# it also now sets the self.session.headers directly and returns None
+	def SetAuth(self, force=False):
+		#apikey overrides any SP site creds
+		if self.apiKey:
+			self.session.headers.update({'X-Api-Key': self.apiKey})
+		else:
+			if not self.token or force:
+				self._NewToken()
+				if self.backgroundRefreshTimer:
+					self.backgroundRefreshTimer.cancel()
+				self.backgroundRefreshTimer = BackgroundRefreshTimer(self.expires, self._RefreshToken)
+				self.backgroundRefreshTimer.start()
+			self.session.headers.update({'Authorization': f'Bearer {self.token}'})
+		return None
 
 	def _NewToken(self):
 		logger.debug('new token')
 		req = TokenRequest()
 		req.clientId = self.clientId
-		req.clientSecret = self.apiKey
+		req.clientSecret = self.clientSecret
 		uri = f'{self.baseAddr}token'
 		ret = self.session.post(uri
 			, data=json.dumps(req.__dict__)
@@ -122,9 +153,8 @@ class HttpClientBase:
 	def PostRaw(self, funct, data, robj=None, headers=None, ver=None):
 		uri = self.BuildUrl(funct, ver)
 		logger.debug('post %s', uri)
-		token = self.GetToken()
+		self.SetAuth()
 		err=''
-		self.session.headers.update({'Authorization': f'Bearer {token}'})
 		ret = self.session.post(uri
 			, data=data, verify=self.verfy, timeout=self.timeout, headers=headers)
 		if ret.status_code == 200:
@@ -156,8 +186,7 @@ class HttpClientBase:
 		uri = self.BuildUrl(funct, ver)
 		logger.debug('post %s', uri)
 
-		token = self.GetToken()
-		self.session.headers.update({'Authorization': f'Bearer {token}'})
+		self.SetAuth()
 		self.session.headers.pop('Content-Type', None) #else it overrides the form post below
 		ret = self.session.post(uri
 			, data=fields, files=files, verify=self.verfy, timeout=self.timeout)
@@ -184,9 +213,8 @@ class HttpClientBase:
 
 	def Get(self, funct, ver=None, robj=None, stream=False):
 		uri = self.BuildUrl(funct, ver)
-		token = self.GetToken()
+		self.SetAuth()
 		err = ''
-		self.session.headers.update({'Authorization': f'Bearer {token}'})
 		ret = self.session.get(uri, stream=stream, verify=self.verfy, timeout=self.timeout)
 		if ret.status_code == 200:
 			if not ret.content or stream:
@@ -211,8 +239,7 @@ class HttpClientBase:
 
 	def Delete(self, funct, ver=None, robj=None):
 		uri = self.BuildUrl(funct, ver)
-		token = self.GetToken()
-		self.session.headers.update({'Authorization': f'Bearer {token}'})
+		self.SetAuth()
 		ret = self.session.delete(uri, verify=self.verfy, timeout=self.timeout)
 		if ret.status_code == 200:
 			if not ret.content:

@@ -5,17 +5,16 @@ from StreetPerfect import StreetPerfectException
 from StreetPerfect.Models import *
 
 try:
-    # my_creds.py simply contains a dict of cred dicts
+    # sp_creds.py simply contains a dict of cred dicts
     """
     creds = {
 	    'dev' : {
-		    'api_id' : 'bmiller@postmedia.com',
-		    'api_key' : 'dev key',
-		    'api_url' : 'https://apidev.streetperfect.com/api/',
+		    'api_key'   : 'on-premisies api key',
+		    'api_url'   : 'http://localhost/api/',
 		    },
         'prod' : {
  		    'api_id' : 'bmiller@postmedia.com',
-		    'api_key' : 'prod key',
+            'api_secret': 'streetperfect.com api secret key'
 		    'api_url' : 'https://api.streetperfect.com/api/',
 		    },
         }
@@ -24,14 +23,15 @@ try:
     import sp_creds
     creds = sp_creds.creds['local']
     #creds = sp_creds.creds['prod']
-    _sp_client_id = creds['api_id']
-    _sp_api_key = creds['api_key']
-    _sp_url = creds['api_url']
+    _sp_client_id = creds.get('api_id')
+    _sp_client_secret = creds.get('api_secret')
+    _sp_api_key = creds.get('api_key')
+    _sp_url = creds.get('api_url')
 except:
     _sp_client_id = 'your id (email)'
-    _sp_api_key = 'your api key'
+    _sp_client_secret = 'your sp.com api secret'
+    _sp_api_key = 'OR your local api key'
     _sp_url = None #alternate api url
-
 
 
 logger = logging.getLogger(__name__)
@@ -91,10 +91,10 @@ def Http_Test():
         options.outputFormatGuide = '7'
         options.maximumTryMessages = 20
 
-        client = HttpClient(_sp_client_id, _sp_api_key, url=_sp_url, use_dev_site=False if _sp_url else True, verify=_verify, opt=options)
+        client = HttpClient(client_id=_sp_client_id, client_secret=_sp_client_secret, api_key=_sp_api_key, url=_sp_url, verify=_verify, opt=options)
 
         info = client.Info()
-        print("\n".join(info.info))
+        print(json.dumps(info.info,  indent = 4) + '\n')
 
         req = caTypeaheadRequest()
         req.address_line = '3267 flower'
@@ -102,10 +102,7 @@ def Http_Test():
         req.tokenize_qry = True
 
         ta_resp = client.caTypeheadRec(req)
-        print(ta_resp.count)
-
-        for r in ta_resp.recs:
-            print(r)
+        print(json.dumps(ta_resp.recs,  indent = 4) + '\n')
 
         req= caTypeaheadFetchRequest()
         req.autocorrect = True
@@ -114,7 +111,7 @@ def Http_Test():
         req.return_components = True
 
         taf_resp = client.caTypeheadFetch(req)
-        print(taf_resp.components)
+        print(json.dumps(taf_resp.components,  indent = 4) + '\n')
 
 
         caReq = caAddressRequest()
@@ -134,20 +131,19 @@ def Http_Test():
         caReq.address_line = "100 Queen"
         caReq.postal_code = "M5H2N1"
         resp = client.caProcessSearch(caReq)
-        print (f"caProcessSearch = stat:{resp.status_flag}, {resp.status_messages}\n")
-
-        for addr in resp.response_address_list:
-            print(str(addr))
+        print (f"caProcessSearch = stat:{resp.status_flag}, {resp.status_messages}\n\n")
+        print(json.dumps(resp.response_address_list, indent = 4))
 
         # you must call Close to stop the background token refresh timer
         # or you can optionally use 'with' when creating the client
         client.Close()
 
         # optional syntax to close the client when out of scope
-        with HttpClient(_sp_client_id, _sp_api_key, use_dev_site=True, verify=_verify, opt=options) as client:
+        with HttpClient(client_id=_sp_client_id, client_secret=_sp_client_secret, api_key=_sp_api_key, url=_sp_url, verify=_verify, opt=options) as client:
             info = client.Info()
-            print("\n".join(info.info))
+            print(json.dumps(info.info, indent = 4))
 
+        #Note: if using an on-premisies api_key, it's not really required to call client.Close() but can't hurt
     except StreetPerfectException as e:
         print(f"StreetPerfectHttpException: {e}")
     client.Close()

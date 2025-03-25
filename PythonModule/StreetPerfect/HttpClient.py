@@ -52,8 +52,10 @@ class HttpClient(HttpClientBase):
 		Info
 			returns GetInfoResponse
 		"""
-		return self.Get('ca/query', robj=GetInfoResponse())
-
+		if self.apiKey:
+			return self.Get('', robj=GetInfoResponse())
+		else:
+			return self.Get('ca/query', robj=GetInfoResponse())
 
 	def caQuery(self, req: caQueryRequest) -> caQueryResponse:
 		"""
