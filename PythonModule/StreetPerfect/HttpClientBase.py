@@ -25,19 +25,19 @@ class BackgroundRefreshTimer(threading.Timer):
 
 class HttpClientBase:
 
-	def __init__(self, client_id=None, client_secret=None, api_key=None
-		, url=None, verify=True, timeout=20
-		, ver='1', debug=False, opt=None):
+	def __init__(self, client_id:str =None, client_secret:str=None, api_key:str=None
+		, url:str=None, verify:bool=True, timeout:int=20
+		, ver:str='1', debug:bool=False, opt:dict=None):
 		"""
-		client_id     = your StreetPerfect username (email)
-		client_secret = your StreetPerfect api (secret) key
-		api_key       = your on-premisies server api key
-		url           = optional, url to your on-premisies server http[s]://host[:port]/api
-		verify        = optional, allows you to ignore ssl cert errors by setting False (default True)
-		timeout       = request timeout, default 20 secs
-		ver           = api version, currently 1 is the (default) only option
-		debug         = if True will add extra debug info to responses
-		opt           = default SreetPerfect request Options (see the Options class model)
+		@param client_id: your StreetPerfect username (email)
+		@param client_secret: your StreetPerfect api (secret) key
+		@param api_key: your on-premisies server api key
+		@param url: optional, url to your on-premisies server http[s]://host[:port]/api
+		@param verify: optional, allows you to ignore ssl cert errors by setting False (default True)
+		@param timeout: request timeout, default 20 secs
+		@param ver: api version, currently 1 is the (default) only option
+		@param debug: if True will add extra debug info to responses
+		@param opt: default SreetPerfect request Options (see the Options class model)
 		"""
 
 		# verify the required params
