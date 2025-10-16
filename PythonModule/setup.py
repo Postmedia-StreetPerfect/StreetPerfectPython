@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='StreetPerfect',
-	version='12.3.2',
+	version='12.3.3',
 	packages=['StreetPerfect'],
 	url='http://www.streetperfect.com/',
 	author='Bill Miller',
