@@ -37,11 +37,12 @@ from StreetPerfect.HttpClient import HttpClient, StreetPerfectHttpException
 from StreetPerfect.Models import *
 
 try:
-    # pass your SP client id and api key
+    # to connect to api.streetperfect.com pass your SP client id and secret
+    client = HttpClient(client_id='me@somewhere.com', client_secret='your secret')
+
     # you can also point the client to your own local SP server
-    client = HttpClient('me@somewhere.com'
-        , 'api key'
-        , use_dev_site=True)
+    # the api key is the same key you generated to logon the local site with
+    client = HttpClient(api_key='your api key', url="http://localhost")
 
     info = client.Info()
     print(info)
@@ -59,10 +60,11 @@ try:
 
     # you must call Close to stop the background token refresh timer
     # or you can optionally use 'with' when creating the client
+    # note that this isn't needed if using an api_key for local site access
     client.Close()      
     
     # optional syntax to close the client when out of scope
-    with HttpClient(_sp_client_id, _sp_api_key, use_dev_site=True, verify=_verify) as client:
+    with HttpClient(_sp_client_id, _sp_client_secret, verify=_verify) as client:
         info = client.Info()
         print("\n".join(info.info))
 

@@ -218,6 +218,6 @@ def Http_Batch_Test():
     client.Close()
 
 if __name__ == '__main__':
-    XPC_Test()
-    #Http_Test()
+    #XPC_Test()
+    Http_Test()
     #Http_Batch_Test()
