@@ -43,7 +43,7 @@ class BatchConfig:
 		self.processErrors = 'N'
 		self.errorTolerance = 2
 		self.maximumTryMessages = 5
-		self.correctLvrAddress = 'Q'
+		self.correctLvrAddress = 'Q' 
 		self.correctLvrAmbiguity = 'Q'
 		self.correctRuralAddress = 'Q'
 		self.reportAllUnidentified = True
