@@ -3,6 +3,7 @@ from StreetPerfect.XpcClient import XpcClient
 from StreetPerfect.HttpClient import HttpClient
 from StreetPerfect import StreetPerfectException
 from StreetPerfect.Models import *
+from requests.auth import HTTPBasicAuth
 
 try:
     # sp_creds.py simply contains a dict of cred dicts
@@ -160,7 +161,7 @@ def Http_Batch_Test():
         options.outputFormatGuide = '7'
         options.maximumTryMessages = 20
 
-        client = HttpClient(_sp_client_id, _sp_api_key, url=_sp_url, use_dev_site=False if _sp_url else True, verify=_verify, opt=options)
+        client = HttpClient(_sp_client_id, _sp_api_key, url=_sp_url, verify=_verify, opt=options)
 
         info = client.Info()
         print("\n".join(info.info))

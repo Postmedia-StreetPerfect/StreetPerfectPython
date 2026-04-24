@@ -136,12 +136,14 @@ if __name__ == '__main__':
     parser.add_argument('-input', default='StreetPerfectBatchInput.csv', help='input CSV file')
     parser.add_argument('-oBad', default='StreetPerfectBatchOutputErrors.csv', help='output error CSV address file')
     parser.add_argument('-oGood', default='StreetPerfectBatchOutput.csv', help='output good CSV address file')
+    
     parser.add_argument('-ordKey', default=1, help='record key column ordinal (all ords ones based)')
     parser.add_argument('-ordRecip', default=2, help='recipient column ordinal')
     parser.add_argument('-ordAddr', default=3, help='address line column ordinal')
     parser.add_argument('-ordCity', default=4, help='city column ordinal')
     parser.add_argument('-ordProv', default=5, help='province column ordinal')
     parser.add_argument('-ordPostal', default=6, help='postal code column ordinal')
+    parser.add_argument('-cfgjson', help='the path to the JSON configuration file (optional). Can overwrite all passed ords.')
 
     args = parser.parse_args()
 
@@ -164,6 +166,22 @@ if __name__ == '__main__':
                       inputCityOffset = args.ordCity, 
                       inputProvinceStateOffset = args.ordProv, 
                       inputPostalZipCodeOffset = args.ordPostal)
+
+    # check if json cfg file is passed
+    if args.cfgjson:
+        try:
+            with open(args.cfgjson) as f:
+                cfgjson = json.load(f)
+            cfg = BatchConfig(**cfgjson)
+            for k,v in cfgjson.items():
+                if hasattr(cfg, k):
+                    setattr(cfg, k, v)
+                else:
+                    logger.warning(f'unknown config key in json cfg file: {k}')
+            logger.info(f'loaded batch config from {args.cfgjson}')
+        except Exception as e:
+            logger.error(f'error loading batch config from {args.cfgjson}: {e}')
+
 
     sp_api_id = ''
     sp_api_key = ''
