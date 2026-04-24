@@ -65,6 +65,17 @@ class BatchConfig:
 		self.overRideInputCountryCode = True
 		self.defaultLanguageCode = 'I'
 		self.overRideInputLanguageCode = True
+		self.batchReportCompanyListId = 'YourCpcId',
+		self.batchReportCompanyName = 'Your company name',
+		self.batchReportName = None,
+		self.batchReportTitle = None,
+		self.batchReportCompanyAddressOne = 'Your street address',
+		self.batchReportCompanyAddressTwo = 'Your city, prov, postal code',
+		self.batchReportCompanyAddressThree = 'Canada',
+		self.userLanguage = 'English',
+		self.outputEncoding = 'utf8',
+		self.outputLineEnding = 'crlf',
+		self.addInputFileToOutputZip = False,
 		self.inputKeyOffset = 0
 		self.inputKeyLength = 0
 		self.inputLanguageOffset = 0
@@ -91,6 +102,7 @@ class BatchConfig:
 		for k,v in kwargs.items():
 			if hasattr(self, k):
 				setattr(self, k, v)
+
 
 class TokenRequest:
 	clientId: str
